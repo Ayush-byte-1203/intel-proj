@@ -6,7 +6,7 @@
     <title>EduConnect - Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
-    <style>
+   <style>
         /* ========== Base Styles ========== */
         :root {
             --primary-color: #2c3e50;
@@ -37,6 +37,7 @@
         /* ========== Layout Styles ========== */
         .container {
             display: flex;
+            flex-direction: column;
             min-height: 100vh;
         }
         
@@ -51,15 +52,36 @@
             top: 0;
             z-index: 100;
         }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .sidebar-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .sidebar-toggle:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
         
         .sidebar {
-            width: 250px;
+            width: 100%;
             background-color: white;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             position: sticky;
             top: 69px; /* header height */
-            height: calc(100vh - 69px);
-            overflow-y: auto;
+            z-index: 99;
+            overflow-x: auto;
         }
         
         .main-content {
@@ -104,6 +126,7 @@
             list-style: none;
             padding: 0;
             margin: 0;
+            display: flex;
         }
         
         .menu-item {
@@ -114,13 +137,14 @@
             text-decoration: none;
             gap: 10px;
             transition: all 0.2s;
+            white-space: nowrap;
         }
         
         .menu-item:hover, 
         .menu-item.active {
             background-color: #f0f5ff;
             color: var(--primary-color);
-            border-left: 3px solid var(--secondary-color);
+            border-bottom: 3px solid var(--secondary-color);
         }
         
         .menu-item i {
@@ -129,7 +153,7 @@
         }
         
         .divider {
-            height: 1px;
+            width: 1px;
             background-color: var(--border-color);
             margin: 15px 0;
         }
@@ -192,6 +216,15 @@
         
         .btn-join:hover {
             background-color: #27ae60;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
         }
         
         /* Section Titles */
@@ -576,6 +609,29 @@
             margin-top: 10px;
             min-height: 50px;
         }
+
+        /* Camera Controls */
+        .camera-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        .camera-control-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .camera-control-btn i {
+            font-size: 0.9rem;
+        }
         
         /* Response Section */
         .response-header {
@@ -898,10 +954,6 @@
         }
         
         @media (max-width: 768px) {
-            .sidebar {
-                width: 200px;
-            }
-            
             .classes-grid {
                 grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             }
@@ -913,20 +965,11 @@
         
         @media (max-width: 576px) {
             .sidebar {
-                position: fixed;
-                left: -250px;
-                top: 69px;
-                height: calc(100vh - 69px);
-                transition: left 0.3s ease;
-                z-index: 100;
+                overflow-x: auto;
             }
             
-            .sidebar.show {
-                left: 0;
-            }
-            
-            .main-content {
-                margin-left: 0;
+            .sidebar-menu {
+                flex-wrap: nowrap;
             }
             
             .session-item {
@@ -938,16 +981,25 @@
             .classroom-ai-section {
                 max-height: 250px;
             }
+
+            .sidebar-toggle {
+                display: block;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <a href="index.html" class="logo">
-                <i class="fas fa-chalkboard-teacher"></i>
-                <span>EduConnect</span>
-            </a>
+            <div class="header-left">
+                <button id="sidebarToggle" class="sidebar-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="index.html" class="logo">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>EduConnect</span>
+                </a>
+            </div>
             <div class="user-menu">
                 <i class="fas fa-bell"></i>
                 <i class="fas fa-envelope"></i>
@@ -1225,11 +1277,19 @@
 
                     <section id="camera-section" aria-label="Camera and Engagement Monitoring Section">
                         <h3>Engagement Monitoring</h3>
+                        <div class="camera-controls">
+                            <button id="startCamera" class="camera-control-btn btn-primary">
+                                <i class="fas fa-video"></i> Start Camera
+                            </button>
+                            <button id="stopCamera" class="camera-control-btn btn-danger">
+                                <i class="fas fa-video-slash"></i> Stop Camera
+                            </button>
+                        </div>
                         <div class="face-canvas-container">
                             <video id="video" width="100%" height="240" autoplay muted playsinline></video>
                             <canvas id="face-canvas" class="face-canvas"></canvas>
                         </div>
-                        <div id="engagement-status" aria-live="polite" aria-atomic="true">Initializing camera...</div>
+                        <div id="engagement-status" aria-live="polite" aria-atomic="true">Camera is off</div>
                         <div class="engagement-meter">
                             <div id="engagement-level" class="engagement-level"></div>
                         </div>
@@ -1237,7 +1297,7 @@
                             <span>Distracted</span>
                             <span>Focused</span>
                         </div>
-                        <div id="model-status">Loading models...</div>
+                        <div id="model-status">Click "Start Camera" to begin</div>
                         <div id="face-data" hidden></div>
                     </section>
 
@@ -1407,6 +1467,10 @@
             const shareApplicationWindow = document.getElementById('shareApplicationWindow');
             const shareBrowserTab = document.getElementById('shareBrowserTab');
             const cancelShare = document.getElementById('cancelShare');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.sidebar');
+            const startCameraBtn = document.getElementById('startCamera');
+            const stopCameraBtn = document.getElementById('stopCamera');
             
             // AI Assistant Elements
             const aiToolBtns = document.querySelectorAll('.ai-tool-btn');
@@ -1448,6 +1512,8 @@
             let lastFaceDetectedTime = 0;
             let faceDetectionInterval = null;
             let engagementHistory = [];
+            let isCameraOn = false;
+            let videoStream = null;
             const MAX_HISTORY = 10;
             
             // Initialize AI models
@@ -2285,6 +2351,17 @@
                 }
             });
             
+            // Sidebar toggle
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+            });
+            
+            // Start camera for engagement detection
+            startCameraBtn.addEventListener('click', startVideo);
+            
+            // Stop camera for engagement detection
+            stopCameraBtn.addEventListener('click', stopVideo);
+            
             // AI Tool Selection
             aiToolBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -2455,6 +2532,126 @@
                 }
             });
 
+            // Start video for engagement detection
+            function startVideo() {
+                if (isCameraOn) return;
+                
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(stream => {
+                        videoStream = stream;
+                        const video = document.getElementById('video');
+                        video.srcObject = stream;
+                        isCameraOn = true;
+                        
+                        // Update UI
+                        startCameraBtn.disabled = true;
+                        stopCameraBtn.disabled = false;
+                        document.getElementById('engagement-status').textContent = 'Initializing camera...';
+                        
+                        // Load face detection models if not already loaded
+                        if (!faceapi.nets.tinyFaceDetector.params) {
+                            Promise.all([
+                                faceapi.nets.tinyFaceDetector.loadFromUri('static/models'),
+                                faceapi.nets.faceLandmark68Net.loadFromUri('static/models'),
+                                faceapi.nets.faceRecognitionNet.loadFromUri('static/models'),
+                                faceapi.nets.faceExpressionNet.loadFromUri('static/models')
+                            ]).then(() => {
+                                document.getElementById('model-status').textContent = 'Face detection models loaded';
+                                detectFaces();
+                            }).catch(err => {
+                                console.error('Error loading face models:', err);
+                                document.getElementById('model-status').textContent = 'Error loading face models';
+                            });
+                        } else {
+                            detectFaces();
+                        }
+                    })
+                    .catch(err => {
+                        console.error('Error accessing camera:', err);
+                        document.getElementById('engagement-status').textContent = 'Camera access denied';
+                    });
+            }
+
+            // Stop video for engagement detection
+            function stopVideo() {
+                if (!isCameraOn) return;
+                
+                // Stop face detection
+                if (faceDetectionInterval) {
+                    clearInterval(faceDetectionInterval);
+                    faceDetectionInterval = null;
+                }
+                
+                // Stop video stream
+                if (videoStream) {
+                    videoStream.getTracks().forEach(track => track.stop());
+                    videoStream = null;
+                }
+                
+                // Clear canvas
+                const canvas = document.getElementById('face-canvas');
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Clear video element
+                const video = document.getElementById('video');
+                video.srcObject = null;
+                
+                // Update UI
+                isCameraOn = false;
+                startCameraBtn.disabled = false;
+                stopCameraBtn.disabled = true;
+                document.getElementById('engagement-status').textContent = 'Camera is off';
+                document.getElementById('model-status').textContent = 'Click "Start Camera" to begin';
+                engagementLevel.style.width = '0%';
+            }
+
+            // Face detection function with engagement scoring
+            function detectFaces() {
+                const video = document.getElementById('video');
+                const canvas = document.getElementById('face-canvas');
+                
+                // Match canvas size to video
+                const displaySize = { width: video.width, height: video.height };
+                canvas.width = displaySize.width;
+                canvas.height = displaySize.height;
+                
+                faceapi.matchDimensions(canvas, displaySize);
+                
+                // Start detection loop
+                faceDetectionInterval = setInterval(async () => {
+                    try {
+                        const detections = await faceapi.detectAllFaces(video, 
+                            new faceapi.TinyFaceDetectorOptions())
+                            .withFaceLandmarks()
+                            .withFaceExpressions();
+                        
+                        const resizedDetections = faceapi.resizeResults(detections, displaySize);
+                        const ctx = canvas.getContext('2d');
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        
+                        // Draw detections
+                        faceapi.draw.drawDetections(canvas, resizedDetections);
+                        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+                        faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
+                        
+                        // Calculate and update engagement score
+                        if (detections.length > 0) {
+                            const score = calculateEngagement(detections);
+                            updateEngagementDisplay(score);
+                            lastFaceDetectedTime = Date.now();
+                        } else {
+                            // No face detected for a while - assume disengaged
+                            if (Date.now() - lastFaceDetectedTime > 3000) {
+                                updateEngagementDisplay(0);
+                            }
+                        }
+                    } catch (err) {
+                        console.error('Face detection error:', err);
+                    }
+                }, 500); // Run twice per second for smoother updates
+            }
+
             // Functions
             function closeClassroomSession() {
                 classroomModal.style.display = 'none';
@@ -2465,9 +2662,8 @@
                 isParticipantsOpen = false;
                 
                 // Stop any ongoing processes
-                const video = document.getElementById('video');
-                if (video.srcObject) {
-                    video.srcObject.getTracks().forEach(track => track.stop());
+                if (isCameraOn) {
+                    stopVideo();
                 }
                 
                 if (recognition) {
@@ -2477,12 +2673,6 @@
                 // Stop screen sharing if active
                 if (isSharingScreen) {
                     stopScreenSharing();
-                }
-                
-                // Clear face detection interval
-                if (faceDetectionInterval) {
-                    clearInterval(faceDetectionInterval);
-                    faceDetectionInterval = null;
                 }
                 
                 // Reset video
@@ -2557,81 +2747,10 @@
                 // Initialize AI models
                 initializeAIModels();
                 
-                // Load face detection models
-                Promise.all([
-                    faceapi.nets.tinyFaceDetector.loadFromUri('static/models'),
-                    faceapi.nets.faceLandmark68Net.loadFromUri('static/models'),
-                    faceapi.nets.faceRecognitionNet.loadFromUri('static/models'),
-                    faceapi.nets.faceExpressionNet.loadFromUri('static/models')
-                ]).then(() => {
-                    document.getElementById('model-status').textContent = 'Face detection models loaded';
-                    startVideo();
-                }).catch(err => {
-                    console.error('Error loading face models:', err);
-                    document.getElementById('model-status').textContent = 'Error loading face models';
-                });
-                
-                // Setup video stream for engagement detection
-                function startVideo() {
-                    navigator.mediaDevices.getUserMedia({ video: true })
-                        .then(stream => {
-                            const video = document.getElementById('video');
-                            video.srcObject = stream;
-                            
-                            // Start face detection
-                            detectFaces();
-                        })
-                        .catch(err => {
-                            console.error('Error accessing camera:', err);
-                            document.getElementById('engagement-status').textContent = 'Camera access denied';
-                        });
-                }
-                
-                // Face detection function with engagement scoring
-                function detectFaces() {
-                    const video = document.getElementById('video');
-                    const canvas = document.getElementById('face-canvas');
-                    
-                    // Match canvas size to video
-                    const displaySize = { width: video.width, height: video.height };
-                    canvas.width = displaySize.width;
-                    canvas.height = displaySize.height;
-                    
-                    faceapi.matchDimensions(canvas, displaySize);
-                    
-                    // Start detection loop
-                    faceDetectionInterval = setInterval(async () => {
-                        try {
-                            const detections = await faceapi.detectAllFaces(video, 
-                                new faceapi.TinyFaceDetectorOptions())
-                                .withFaceLandmarks()
-                                .withFaceExpressions();
-                            
-                            const resizedDetections = faceapi.resizeResults(detections, displaySize);
-                            const ctx = canvas.getContext('2d');
-                            ctx.clearRect(0, 0, canvas.width, canvas.height);
-                            
-                            // Draw detections
-                            faceapi.draw.drawDetections(canvas, resizedDetections);
-                            faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
-                            faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
-                            
-                            // Calculate and update engagement score
-                            if (detections.length > 0) {
-                                const score = calculateEngagement(detections);
-                                updateEngagementDisplay(score);
-                                lastFaceDetectedTime = Date.now();
-                            } else {
-                                // No face detected for a while - assume disengaged
-                                if (Date.now() - lastFaceDetectedTime > 3000) {
-                                    updateEngagementDisplay(0);
-                                }
-                            }
-                        } catch (err) {
-                            console.error('Face detection error:', err);
-                        }
-                    }, 500); // Run twice per second for smoother updates
-                }
+                // Setup buttons
+                startCameraBtn.disabled = false;
+                stopCameraBtn.disabled = true;
+                document.getElementById('model-status').textContent = 'Click "Start Camera" to begin engagement monitoring';
             }
         });
     </script>
