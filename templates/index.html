@@ -5,9 +5,316 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EduConnect - Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css">
     <style>
-        /* Classroom Modal Styles */
+        /* ========== Base Styles ========== */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --info-color: #9b59b6;
+            --light-color: #f5f7fa;
+            --dark-color: #333;
+            --gray-color: #7f8c8d;
+            --border-color: #e0e0e0;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        /* ========== Layout Styles ========== */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 69px; /* header height */
+            height: calc(100vh - 69px);
+            overflow-y: auto;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        /* ========== Component Styles ========== */
+        /* Logo */
+        .logo {
+            color: white;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* User Menu */
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        /* Sidebar Menu */
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #555;
+            text-decoration: none;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+        
+        .menu-item:hover, 
+        .menu-item.active {
+            background-color: #f0f5ff;
+            color: var(--primary-color);
+            border-left: 3px solid var(--secondary-color);
+        }
+        
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        .divider {
+            height: 1px;
+            background-color: var(--border-color);
+            margin: 15px 0;
+        }
+        
+        /* Welcome Banner */
+        .welcome-banner {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+        
+        .welcome-banner h1 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--secondary-color);
+            color: var(--secondary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: #f0f7ff;
+        }
+        
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-join {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-join:hover {
+            background-color: #27ae60;
+        }
+        
+        /* Section Titles */
+        .section-title {
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        /* Classes Grid */
+        .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .class-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .class-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .class-header {
+            height: 100px;
+        }
+        
+        .math { background-color: var(--secondary-color); }
+        .science { background-color: var(--danger-color); }
+        .history { background-color: var(--warning-color); }
+        .literature { background-color: var(--info-color); }
+        
+        .class-body {
+            padding: 15px;
+        }
+        
+        .class-title {
+            margin-top: 0;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        .class-teacher {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        .class-schedule {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #555;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .class-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* Upcoming Sessions */
+        .upcoming-sessions {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .session-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .session-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        
+        .session-info {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .session-time {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            min-width: 70px;
+            text-align: center;
+        }
+        
+        .session-details h4 {
+            margin: 0 0 5px 0;
+            color: var(--primary-color);
+        }
+        
+        .session-details p {
+            margin: 0;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        /* ========== Classroom Modal Styles ========== */
         .classroom-modal {
             display: none;
             position: fixed;
@@ -34,7 +341,7 @@
         
         .classroom-header {
             padding: 15px 20px;
-            background-color: #2c3e50;
+            background-color: var(--primary-color);
             color: white;
             display: flex;
             justify-content: space-between;
@@ -57,7 +364,7 @@
         
         .classroom-ai-section {
             width: 350px;
-            border-right: 1px solid #ddd;
+            border-right: 1px solid var(--border-color);
             padding: 15px;
             overflow-y: auto;
             background-color: white;
@@ -113,7 +420,7 @@
             display: flex;
             gap: 10px;
             padding: 15px;
-            background-color: #2c3e50;
+            background-color: var(--primary-color);
             justify-content: center;
             align-items: center;
         }
@@ -138,118 +445,260 @@
         }
         
         .control-btn.active {
-            background-color: #1abc9c;
+            background-color: var(--success-color);
         }
         
         .control-btn.danger {
-            background-color: #e74c3c;
+            background-color: var(--danger-color);
         }
         
         .control-btn.danger:hover {
             background-color: #c0392b;
         }
         
-        .control-btn i {
-            font-size: 16px;
+        /* ========== AI Tools Section ========== */
+        .ai-tool-selector {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
         }
         
-        /* AI Section Styles */
-        #input-section {
-            margin-bottom: 20px;
+        .ai-tool-btn {
+            flex: 1;
+            padding: 10px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            color: var(--gray-color);
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .ai-tool-btn:hover {
+            color: var(--secondary-color);
+        }
+        
+        .ai-tool-btn.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--secondary-color);
+        }
+        
+        .query-panel {
+            display: none;
             padding: 15px;
-            background-color: #f5f7fa;
+            background-color: #f8f9fa;
             border-radius: 8px;
+            margin-bottom: 15px;
         }
         
-        #input-section label {
+        .query-panel.active {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #2c3e50;
         }
         
-        #text-query {
+        textarea {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
+            margin-bottom: 10px;
             resize: vertical;
-            min-height: 80px;
-            margin-bottom: 10px;
-            font-family: inherit;
+            min-height: 100px;
         }
         
-        #submit-text, #start-voice, #stop-voice {
-            width: 100%;
-            margin-bottom: 8px;
-        }
-        
-        #voice-status {
-            font-size: 13px;
-            color: #7f8c8d;
-            text-align: center;
-            margin-top: 5px;
-        }
-        
-        #camera-section {
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #f5f7fa;
-            border-radius: 8px;
-        }
-        
-        #camera-section h3 {
-            margin-top: 0;
+        /* Image Upload */
+        .image-upload-container {
             margin-bottom: 15px;
-            color: #2c3e50;
         }
         
-        #video {
-            width: 100%;
-            border-radius: 4px;
-            background-color: #000;
-            margin-bottom: 10px;
-        }
-        
-        #engagement-status, #model-status {
-            font-size: 13px;
-            margin-bottom: 5px;
-        }
-        
-        #response-section {
-            flex: 1;
-            padding: 15px;
-            background-color: #f5f7fa;
-            border-radius: 8px;
+        .upload-area {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            min-height: 150px;
         }
         
-        #response-section label {
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 8px;
+        .upload-area:hover {
+            border-color: var(--secondary-color);
+            background-color: #f5f9ff;
+        }
+        
+        .upload-area i {
+            font-size: 48px;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+        
+        .upload-area p {
+            margin: 0;
+            color: var(--gray-color);
+        }
+        
+        .preview-container {
+            margin-top: 15px;
+            max-width: 100%;
+            display: none;
+        }
+        
+        .preview-container img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .image-query-options {
+            margin-top: 15px;
+        }
+        
+        /* Voice Query */
+        .voice-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        #voice-transcript {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+            min-height: 50px;
+        }
+        
+        /* Response Section */
+        .response-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .response-header h3 {
+            margin: 0;
+            color: var(--primary-color);
+        }
+        
+        .response-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        #response-content {
+            min-height: 200px;
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
         }
         
         #response-text {
-            flex: 1;
-            border: 1px solid #ddd;
-            padding: 15px;
-            margin-bottom: 15px;
-            background-color: white;
+            line-height: 1.6;
+        }
+        
+        .image-response-container {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .image-response-container img {
+            max-width: 100%;
             border-radius: 4px;
-            overflow-y: auto;
-            min-height: 150px;
-            line-height: 1.5;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
-        #ai-source {
+        #chart-container {
+            margin-top: 15px;
+            max-width: 100%;
+            overflow: auto;
+        }
+        
+        .source-indicator {
+            display: flex;
+            justify-content: space-between;
             font-size: 12px;
-            color: #7f8c8d;
-            text-align: right;
+            color: var(--gray-color);
         }
         
-        /* Participant List */
+        /* Loading Animation */
+        .loading-dots {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+        
+        .dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+        
+        .dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+        
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+        
+        /* Engagement Meter */
+        .engagement-meter {
+            margin-top: 15px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+        }
+        
+        .engagement-level {
+            height: 100%;
+            background-color: var(--success-color);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .engagement-label {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.8rem;
+            color: var(--gray-color);
+        }
+        
+        /* Face Detection Canvas */
+        .face-canvas-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .face-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        /* ========== Participant List ========== */
         .participant-list {
             position: absolute;
             right: -350px;
@@ -257,7 +706,7 @@
             width: 350px;
             height: 100%;
             background-color: white;
-            border-left: 1px solid #ddd;
+            border-left: 1px solid var(--border-color);
             transition: right 0.3s ease;
             z-index: 10;
             overflow-y: auto;
@@ -270,9 +719,9 @@
         
         .participant-list h3 {
             margin-top: 0;
-            color: #2c3e50;
+            color: var(--primary-color);
             padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-color);
         }
         
         .participant-item {
@@ -286,7 +735,7 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background-color: #3498db;
+            background-color: var(--secondary-color);
             color: white;
             display: flex;
             align-items: center;
@@ -299,7 +748,7 @@
             flex: 1;
         }
         
-        /* Chat Panel */
+        /* ========== Chat Panel ========== */
         .chat-panel {
             position: absolute;
             right: -350px;
@@ -307,7 +756,7 @@
             width: 350px;
             height: 100%;
             background-color: white;
-            border-left: 1px solid #ddd;
+            border-left: 1px solid var(--border-color);
             transition: right 0.3s ease;
             z-index: 10;
             display: flex;
@@ -320,7 +769,7 @@
         
         .chat-header {
             padding: 15px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -334,7 +783,7 @@
         
         .chat-input {
             padding: 15px;
-            border-top: 1px solid #eee;
+            border-top: 1px solid var(--border-color);
             display: flex;
             gap: 10px;
         }
@@ -342,13 +791,13 @@
         .chat-input input {
             flex: 1;
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
         }
         
         .chat-input button {
             padding: 10px 15px;
-            background-color: #3498db;
+            background-color: var(--secondary-color);
             color: white;
             border: none;
             border-radius: 4px;
@@ -371,7 +820,7 @@
             display: inline-block;
         }
         
-        /* Screen Sharing Overlay */
+        /* ========== Screen Sharing ========== */
         .screen-share-overlay {
             position: absolute;
             top: 0;
@@ -402,7 +851,7 @@
         }
         
         .screen-option {
-            border: 1px solid #ddd;
+            border: 1px solid var(--border-color);
             padding: 15px;
             border-radius: 4px;
             cursor: pointer;
@@ -411,18 +860,18 @@
         }
         
         .screen-option:hover {
-            border-color: #3498db;
-            background-color: #f5f7fa;
+            border-color: var(--secondary-color);
+            background-color: #f5f9ff;
         }
         
         .screen-option i {
             font-size: 24px;
             display: block;
             margin-bottom: 10px;
-            color: #3498db;
+            color: var(--secondary-color);
         }
         
-        /* Responsive Adjustments */
+        /* ========== Responsive Adjustments ========== */
         @media (max-width: 1200px) {
             .classroom-ai-section {
                 width: 300px;
@@ -437,7 +886,7 @@
             .classroom-ai-section {
                 width: 100%;
                 border-right: none;
-                border-bottom: 1px solid #ddd;
+                border-bottom: 1px solid var(--border-color);
                 max-height: 300px;
                 overflow-y: auto;
             }
@@ -445,6 +894,49 @@
             .participant-list, .chat-panel {
                 width: 100%;
                 right: -100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            
+            .classes-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+            
+            .class-controls {
+                flex-wrap: wrap;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .sidebar {
+                position: fixed;
+                left: -250px;
+                top: 69px;
+                height: calc(100vh - 69px);
+                transition: left 0.3s ease;
+                z-index: 100;
+            }
+            
+            .sidebar.show {
+                left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .session-item {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .classroom-ai-section {
+                max-height: 250px;
             }
         }
     </style>
@@ -682,31 +1174,96 @@
             </div>
             <div class="classroom-content">
                 <div class="classroom-ai-section">
-                    <!-- AI Assistant Section -->
-                    <section id="input-section" aria-label="Query Input Section">
-                        <label for="text-query">Ask a Question or Enter Query:</label>
-                        <textarea id="text-query" placeholder="Type your question here..."></textarea>
-                        <button id="submit-text" class="btn btn-primary">Submit Query</button>
-                        <button id="start-voice" class="btn btn-outline">🎙️ Start Voice Query</button>
-                        <button id="stop-voice" class="btn btn-outline" style="display:none;">⏹️ Stop Voice Query</button>
-                        <div id="voice-status" aria-live="polite"></div>
+                    <!-- AI Tools Section -->
+                    <section id="ai-tools-section">
+                        <div class="ai-tool-selector">
+                            <button class="ai-tool-btn active" data-tool="text"><i class="fas fa-keyboard"></i> Text</button>
+                            <button class="ai-tool-btn" data-tool="image"><i class="fas fa-image"></i> Image</button>
+                            <button class="ai-tool-btn" data-tool="voice"><i class="fas fa-microphone"></i> Voice</button>
+                        </div>
+
+                        <!-- Text Query Panel (default visible) -->
+                        <div id="text-query-panel" class="query-panel active">
+                            <label for="text-query">Ask a question about the class:</label>
+                            <textarea id="text-query" placeholder="Type your question here..."></textarea>
+                            <button id="submit-text" class="btn btn-primary">Submit Query</button>
+                        </div>
+
+                        <!-- Image Query Panel -->
+                        <div id="image-query-panel" class="query-panel">
+                            <label>Upload an image of your doubt:</label>
+                            <div class="image-upload-container">
+                                <input type="file" id="image-upload" accept="image/*" hidden>
+                                <label for="image-upload" class="upload-area" id="upload-area">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload or drag & drop</p>
+                                    <div class="preview-container" id="image-preview"></div>
+                                </label>
+                            </div>
+                            <div class="image-query-options">
+                                <label for="image-question">Add context (optional):</label>
+                                <textarea id="image-question" placeholder="What's your question about this image?"></textarea>
+                                <button id="submit-image" class="btn btn-primary">Analyze Image</button>
+                            </div>
+                        </div>
+
+                        <!-- Voice Query Panel -->
+                        <div id="voice-query-panel" class="query-panel">
+                            <label>Ask your question verbally:</label>
+                            <div class="voice-controls">
+                                <button id="start-voice" class="btn btn-primary">
+                                    <i class="fas fa-microphone"></i> Start Recording
+                                </button>
+                                <button id="stop-voice" class="btn btn-danger" disabled>
+                                    <i class="fas fa-stop"></i> Stop
+                                </button>
+                            </div>
+                            <div id="voice-status" aria-live="polite"></div>
+                            <div id="voice-transcript"></div>
+                        </div>
                     </section>
 
                     <section id="camera-section" aria-label="Camera and Engagement Monitoring Section">
                         <h3>Engagement Monitoring</h3>
-                        <video id="video" width="100%" height="240" autoplay muted playsinline></video>
+                        <div class="face-canvas-container">
+                            <video id="video" width="100%" height="240" autoplay muted playsinline></video>
+                            <canvas id="face-canvas" class="face-canvas"></canvas>
+                        </div>
                         <div id="engagement-status" aria-live="polite" aria-atomic="true">Initializing camera...</div>
+                        <div class="engagement-meter">
+                            <div id="engagement-level" class="engagement-level"></div>
+                        </div>
+                        <div class="engagement-label">
+                            <span>Distracted</span>
+                            <span>Focused</span>
+                        </div>
                         <div id="model-status">Loading models...</div>
                         <div id="face-data" hidden></div>
                     </section>
 
                     <section id="response-section" aria-label="Response Display Section">
-                        <label>AI Response:</label>
-                        <div id="response-text" role="region" aria-live="polite" aria-atomic="true"></div>
-                        <div id="chart-container" hidden>
-                            <canvas id="chart" aria-label="Visual Aid Chart"></canvas>
+                        <div class="response-header">
+                            <h3>AI Response</h3>
+                            <div class="response-actions">
+                                <button id="copy-response" class="btn btn-sm btn-outline">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                                <button id="clear-response" class="btn btn-sm btn-outline">
+                                    <i class="fas fa-trash"></i> Clear
+                                </button>
+                            </div>
                         </div>
-                        <div id="ai-source" class="source-indicator">Using local Qwen1.5-7B model</div>
+                        <div id="response-content">
+                            <div id="response-text" role="region" aria-live="polite"></div>
+                            <div id="image-response" class="image-response-container"></div>
+                            <div id="chart-container" hidden>
+                                <canvas id="chart" aria-label="Visual Aid Chart"></canvas>
+                            </div>
+                        </div>
+                        <div id="ai-source" class="source-indicator">
+                            <span>AI Model: Qwen-VL (Multimodal)</span>
+                            <span id="processing-time"></span>
+                        </div>
                     </section>
                 </div>
                 <div class="classroom-video-section">
@@ -715,6 +1272,7 @@
                             <source src="" type="video/mp4">
                             Your browser does not support the video tag.
                         </video>
+                        <video id="screenShareVideo" width="100%" height="auto" autoplay muted style="display: none;"></video>
                     </div>
                     <div class="class-controls">
                         <button id="muteBtn" class="control-btn">
@@ -816,8 +1374,13 @@
         </div>
     </div>
 
-    <!-- JavaScript Files -->
+    <!-- JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.12.0/dist/ort.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
     <script>
         // Classroom join functionality
         document.addEventListener('DOMContentLoaded', function() {
@@ -827,6 +1390,7 @@
             const closeClassroom = document.getElementById('closeClassroom');
             const classroomTitle = document.getElementById('classroomTitle');
             const classVideo = document.getElementById('classVideo');
+            const screenShareVideo = document.getElementById('screenShareVideo');
             const muteBtn = document.getElementById('muteBtn');
             const videoBtn = document.getElementById('videoBtn');
             const shareBtn = document.getElementById('shareBtn');
@@ -844,6 +1408,28 @@
             const shareBrowserTab = document.getElementById('shareBrowserTab');
             const cancelShare = document.getElementById('cancelShare');
             
+            // AI Assistant Elements
+            const aiToolBtns = document.querySelectorAll('.ai-tool-btn');
+            const queryPanels = document.querySelectorAll('.query-panel');
+            const textQueryPanel = document.getElementById('text-query-panel');
+            const imageQueryPanel = document.getElementById('image-query-panel');
+            const voiceQueryPanel = document.getElementById('voice-query-panel');
+            const uploadArea = document.getElementById('upload-area');
+            const imageUpload = document.getElementById('image-upload');
+            const imagePreview = document.getElementById('image-preview');
+            const submitImageBtn = document.getElementById('submit-image');
+            const submitTextBtn = document.getElementById('submit-text');
+            const startVoiceBtn = document.getElementById('start-voice');
+            const stopVoiceBtn = document.getElementById('stop-voice');
+            const voiceStatus = document.getElementById('voice-status');
+            const voiceTranscript = document.getElementById('voice-transcript');
+            const responseText = document.getElementById('response-text');
+            const imageResponse = document.getElementById('image-response');
+            const copyResponseBtn = document.getElementById('copy-response');
+            const clearResponseBtn = document.getElementById('clear-response');
+            const processingTime = document.getElementById('processing-time');
+            const engagementLevel = document.getElementById('engagement-level');
+            
             // State variables
             let isMuted = false;
             let isVideoOff = false;
@@ -851,6 +1437,655 @@
             let isChatOpen = false;
             let isParticipantsOpen = false;
             let recognition = null;
+            let currentTool = 'text';
+            let selectedImage = null;
+            let imageQuestion = '';
+            let sampleChart = null;
+            let aiSession = null; // ONNX runtime session
+            let screenStream = null; // For screen sharing
+            let peerConnection = null; // WebRTC connection (simulated)
+            let engagementScore = 0;
+            let lastFaceDetectedTime = 0;
+            let faceDetectionInterval = null;
+            let engagementHistory = [];
+            const MAX_HISTORY = 10;
+            
+            // Initialize AI models
+            async function initializeAIModels() {
+                try {
+                    // Load ONNX model (simplified example)
+                    // In a real app, you would load your OpenVINO-optimized model here
+                    document.getElementById('model-status').textContent = 'Loading AI models...';
+                    
+                    // Simulate loading a model (replace with actual model loading)
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    // For demo purposes, we'll just indicate the models are loaded
+                    document.getElementById('model-status').textContent = 'Models loaded (Qwen-VL)';
+                    
+                } catch (err) {
+                    console.error('Error loading AI models:', err);
+                    document.getElementById('model-status').textContent = 'Error loading models';
+                }
+            }
+            
+            // Process text query with AI
+            async function processTextQueryWithAI(query) {
+                try {
+                    // Show loading state
+                    responseText.innerHTML = `
+                        <div class="loading-dots">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span> Processing your question...
+                        </div>
+                    `;
+                    
+                    const startTime = performance.now();
+                    
+                    // In a real app, you would send this to your backend service
+                    // For demo, we'll simulate an API call
+                    const response = await simulateAIResponse(query);
+                    
+                    const processingDuration = ((performance.now() - startTime) / 1000).toFixed(2);
+                    processingTime.textContent = `Processed in ${processingDuration}s`;
+                    
+                    // Display the response
+                    responseText.innerHTML = response;
+                    
+                    // Generate a sample chart if relevant
+                    if (query.toLowerCase().includes('progress') || query.toLowerCase().includes('chart')) {
+                        generateSampleChart();
+                    }
+                    
+                } catch (err) {
+                    console.error('Error processing query:', err);
+                    responseText.innerHTML = `<p class="error">Error processing your request. Please try again.</p>`;
+                }
+            }
+            
+            // Simulate AI response with accurate answers
+            async function simulateAIResponse(query) {
+                // This would be replaced with actual API call to your backend in production
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const lowerQuery = query.toLowerCase();
+                        
+                        // Mathematics responses
+                        if (lowerQuery.includes('linear algebra') || lowerQuery.includes('matrix') || lowerQuery.includes('vector')) {
+                            if (lowerQuery.includes('eigenvalue') || lowerQuery.includes('eigenvector')) {
+                                resolve(`
+                                    <h4>Eigenvalues and Eigenvectors</h4>
+                                    <p>Eigenvalues (λ) and eigenvectors (v) are fundamental concepts in linear algebra that satisfy the equation:</p>
+                                    <p><strong>A·v = λ·v</strong></p>
+                                    <p>Where A is a square matrix. This means that when matrix A acts on vector v, the output is a scaled version of v.</p>
+                                    <p>Key properties:</p>
+                                    <ul>
+                                        <li>Eigenvalues can be real or complex numbers</li>
+                                        <li>An n×n matrix has at most n distinct eigenvalues</li>
+                                        <li>Eigenvectors corresponding to distinct eigenvalues are linearly independent</li>
+                                        <li>Used in principal component analysis (PCA), stability analysis, and quantum mechanics</li>
+                                    </ul>
+                                    <p>Example calculation for matrix A = [[2,1],[1,2]]:</p>
+                                    <ol>
+                                        <li>Find characteristic equation: det(A - λI) = 0 → (2-λ)² - 1 = 0</li>
+                                        <li>Solve for λ: λ² -4λ +3 = 0 → λ = 1 and λ = 3</li>
+                                        <li>For λ=1: solve (A-I)v=0 → v = [1,-1]</li>
+                                        <li>For λ=3: solve (A-3I)v=0 → v = [1,1]</li>
+                                    </ol>
+                                `);
+                            } else if (lowerQuery.includes('determinant')) {
+                                resolve(`
+                                    <h4>Matrix Determinants</h4>
+                                    <p>The determinant is a scalar value that can be computed from a square matrix and encodes important properties:</p>
+                                    <ul>
+                                        <li>For 2×2 matrix [[a,b],[c,d]], det = ad - bc</li>
+                                        <li>For 3×3 matrix, use the rule of Sarrus or Laplace expansion</li>
+                                        <li>A matrix is invertible if and only if its determinant is non-zero</li>
+                                        <li>Absolute value represents the scaling factor of the linear transformation</li>
+                                        <li>Determinant of product is product of determinants: det(AB) = det(A)det(B)</li>
+                                    </ul>
+                                    <p>Example applications:</p>
+                                    <ol>
+                                        <li>Solving systems of linear equations (Cramer's rule)</li>
+                                        <li>Computing eigenvalues (roots of characteristic polynomial)</li>
+                                        <li>Testing linear independence of vectors</li>
+                                        <li>Calculating area/volume changes in transformations</li>
+                                    </ol>
+                                `);
+                            } else {
+                                resolve(`
+                                    <h4>Linear Algebra Concepts</h4>
+                                    <p>Linear algebra is the branch of mathematics concerning linear equations, linear functions, and their representations through matrices and vector spaces.</p>
+                                    <p>Key concepts include:</p>
+                                    <ul>
+                                        <li><strong>Vector Spaces:</strong> A set of vectors that can be added together and multiplied by scalars</li>
+                                        <li><strong>Linear Transformations:</strong> Functions between vector spaces that preserve vector addition and scalar multiplication</li>
+                                        <li><strong>Matrix Operations:</strong> Addition, multiplication, inversion, and decomposition techniques</li>
+                                        <li><strong>Systems of Equations:</strong> Solving Ax = b using techniques like Gaussian elimination</li>
+                                    </ul>
+                                    <p>Applications in computer science:</p>
+                                    <ol>
+                                        <li>Computer graphics (transformations, projections)</li>
+                                        <li>Machine learning (principal component analysis, neural networks)</li>
+                                        <li>Cryptography (error-correcting codes)</li>
+                                        <li>Optimization problems</li>
+                                    </ol>
+                                `);
+                            }
+                        }
+                        // Physics responses
+                        else if (lowerQuery.includes('quantum') || lowerQuery.includes('physics')) {
+                            if (lowerQuery.includes('schrödinger') || lowerQuery.includes('wave function')) {
+                                resolve(`
+                                    <h4>Schrödinger Equation</h4>
+                                    <p>The Schrödinger equation describes how the quantum state of a physical system changes with time:</p>
+                                    <p><strong>iħ∂ψ/∂t = Ĥψ</strong></p>
+                                    <p>Where:</p>
+                                    <ul>
+                                        <li>ψ is the wave function of the system</li>
+                                        <li>Ĥ is the Hamiltonian operator</li>
+                                        <li>ħ is the reduced Planck constant</li>
+                                        <li>i is the imaginary unit</li>
+                                    </ul>
+                                    <p>Key points:</p>
+                                    <ol>
+                                        <li>Time-dependent form describes evolution of quantum systems</li>
+                                        <li>Time-independent form: Ĥψ = Eψ gives stationary states</li>
+                                        <li>Solutions give probability amplitudes (|ψ|² is probability density)</li>
+                                        <li>For a particle in a box, solutions are standing waves with quantized energy levels</li>
+                                    </ol>
+                                    <p>Example: For a free particle in 1D, solutions are plane waves ψ(x,t) = Ae^(i(kx-ωt))</p>
+                                `);
+                            } else if (lowerQuery.includes('uncertainty principle')) {
+                                resolve(`
+                                    <h4>Heisenberg Uncertainty Principle</h4>
+                                    <p>States that certain pairs of physical properties cannot both be known to arbitrary precision:</p>
+                                    <p><strong>σₓσₚ ≥ ħ/2</strong></p>
+                                    <p>Where σₓ is position uncertainty, σₚ is momentum uncertainty, and ħ is reduced Planck constant.</p>
+                                    <p>Key implications:</p>
+                                    <ul>
+                                        <li>Fundamental limit on measurement precision, not just experimental limitation</li>
+                                        <li>Results from wave-particle duality</li>
+                                        <li>Other uncertainty relations exist (energy-time, angular momentum components)</li>
+                                        <li>Leads to zero-point energy in quantum systems</li>
+                                    </ul>
+                                    <p>Example: Confining an electron to a small space (small σₓ) increases momentum uncertainty, requiring higher energy</p>
+                                `);
+                            } else {
+                                resolve(`
+                                    <h4>Quantum Mechanics Fundamentals</h4>
+                                    <p>Quantum mechanics is the physics of the very small, describing nature at atomic and subatomic scales.</p>
+                                    <p>Core principles:</p>
+                                    <ol>
+                                        <li><strong>Wave-Particle Duality:</strong> All particles exhibit both wave and particle properties</li>
+                                        <li><strong>Quantization:</strong> Physical quantities take discrete values (energy levels, angular momentum)</li>
+                                        <li><strong>Superposition:</strong> Quantum systems can exist in multiple states simultaneously until measured</li>
+                                        <li><strong>Entanglement:</strong> Particles can become correlated such that the state of one instantly influences the other</li>
+                                    </ol>
+                                    <p>Key mathematical tools:</p>
+                                    <ul>
+                                        <li>Wave functions (solutions to Schrödinger equation)</li>
+                                        <li>Operators representing observables (position, momentum, energy)</li>
+                                        <li>Hilbert spaces for state representation</li>
+                                        <li>Bra-ket notation for state vectors</li>
+                                    </ul>
+                                `);
+                            }
+                        }
+                        // History responses
+                        else if (lowerQuery.includes('history') || lowerQuery.includes('historical')) {
+                            if (lowerQuery.includes('world war') || lowerQuery.includes('wwii')) {
+                                resolve(`
+                                    <h4>World War II Overview</h4>
+                                    <p>World War II (1939-1945) was a global conflict involving over 30 countries and resulting in 70-85 million fatalities.</p>
+                                    <p>Key events:</p>
+                                    <ul>
+                                        <li><strong>1939:</strong> Germany invades Poland (September 1), Britain and France declare war</li>
+                                        <li><strong>1941:</strong> Germany invades USSR (June), Japan attacks Pearl Harbor (December)</li>
+                                        <li><strong>1942:</strong> Battle of Stalingrad, Midway, and El Alamein mark turning points</li>
+                                        <li><strong>1944:</strong> D-Day landings in Normandy (June 6)</li>
+                                        <li><strong>1945:</strong> Germany surrenders (May), atomic bombs dropped on Japan (August)</li>
+                                    </ul>
+                                    <p>Major consequences:</p>
+                                    <ol>
+                                        <li>Establishment of United Nations</li>
+                                        <li>Beginning of Cold War between US and USSR</li>
+                                        <li>Decolonization movements in Asia and Africa</li>
+                                        <li>Advancements in technology (jet engines, radar, computers)</li>
+                                    </ol>
+                                `);
+                            } else if (lowerQuery.includes('industrial revolution')) {
+                                resolve(`
+                                    <h4>Industrial Revolution</h4>
+                                    <p>The Industrial Revolution (1760-1840) marked the transition to new manufacturing processes.</p>
+                                    <p>Key developments:</p>
+                                    <ul>
+                                        <li><strong>Textiles:</strong> Spinning jenny (1764), power loom (1785), cotton gin (1793)</li>
+                                        <li><strong>Steam Power:</strong> James Watt's improved steam engine (1776)</li>
+                                        <li><strong>Iron Production:</strong> Coke smelting (1709), puddling process (1784)</li>
+                                        <li><strong>Transportation:</strong> Steam locomotive (1804), steamboat (1807)</li>
+                                    </ul>
+                                    <p>Social impacts:</p>
+                                    <ol>
+                                        <li>Urbanization as people moved to cities for factory work</li>
+                                        <li>Growth of middle class and industrial capitalism</li>
+                                        <li>Poor working conditions led to labor movements</li>
+                                        <li>Increased productivity raised standards of living long-term</li>
+                                    </ol>
+                                `);
+                            } else {
+                                resolve(`
+                                    <h4>Historical Analysis</h4>
+                                    <p>History is the study of past events, particularly human affairs.</p>
+                                    <p>Key historical methodologies:</p>
+                                    <ul>
+                                        <li><strong>Primary Sources:</strong> Original documents, artifacts, recordings from the period</li>
+                                        <li><strong>Secondary Sources:</strong> Interpretations and analyses by historians</li>
+                                        <li><strong>Historiography:</strong> The study of historical writing and methodology</li>
+                                        <li><strong>Chronology:</strong> Establishing timelines of events</li>
+                                    </ul>
+                                    <p>Major historical periods:</p>
+                                    <ol>
+                                        <li>Ancient History (3000 BCE - 500 CE)</li>
+                                        <li>Middle Ages (500-1500)</li>
+                                        <li>Early Modern Period (1500-1800)</li>
+                                        <li>Modern History (1800-present)</li>
+                                    </ol>
+                                    <p>Historical thinking skills include contextualization, sourcing, corroboration, and periodization.</p>
+                                `);
+                            }
+                        }
+                        // Literature responses
+                        else if (lowerQuery.includes('literature') || lowerQuery.includes('shakespeare')) {
+                            if (lowerQuery.includes('sonnet') || lowerQuery.includes('poem')) {
+                                resolve(`
+                                    <h4>Shakespeare's Sonnets</h4>
+                                    <p>Shakespeare wrote 154 sonnets, first published in 1609. They follow the English (Shakespearean) sonnet form:</p>
+                                    <ul>
+                                        <li>14 lines divided into 3 quatrains and a final couplet</li>
+                                        <li>Rhyme scheme: ABAB CDCD EFEF GG</li>
+                                        <li>Iambic pentameter (10 syllables per line, unstressed-stressed pattern)</li>
+                                        <li>Themes: love, beauty, politics, mortality</li>
+                                    </ul>
+                                    <p>Famous examples:</p>
+                                    <ol>
+                                        <li><strong>Sonnet 18:</strong> "Shall I compare thee to a summer's day?"</li>
+                                        <li><strong>Sonnet 116:</strong> "Let me not to the marriage of true minds"</li>
+                                        <li><strong>Sonnet 130:</strong> "My mistress' eyes are nothing like the sun"</li>
+                                    </ol>
+                                    <p>Literary devices used:</p>
+                                    <ul>
+                                        <li>Metaphor and simile</li>
+                                        <li>Personification</li>
+                                        <li>Alliteration</li>
+                                        <li>Paradox</li>
+                                    </ul>
+                                `);
+                            } else if (lowerQuery.includes('hamlet') || lowerQuery.includes('tragedy')) {
+                                resolve(`
+                                    <h4>Shakespeare's Hamlet</h4>
+                                    <p>Hamlet is a tragedy written around 1599-1601, one of Shakespeare's most famous plays.</p>
+                                    <p>Key elements:</p>
+                                    <ul>
+                                        <li><strong>Plot:</strong> Prince Hamlet seeks revenge against his uncle Claudius for murdering his father</li>
+                                        <li><strong>Themes:</strong> Revenge, mortality, madness, political intrigue</li>
+                                        <li><strong>Famous Soliloquy:</strong> "To be or not to be" (Act 3, Scene 1)</li>
+                                        <li><strong>Characters:</strong> Hamlet, Claudius, Gertrude, Ophelia, Polonius, Horatio</li>
+                                    </ul>
+                                    <p>Literary significance:</p>
+                                    <ol>
+                                        <li>Exploration of human psychology and existential questions</li>
+                                        <li>Innovative use of blank verse and prose</li>
+                                        <li>Complex character development</li>
+                                        <li>Influence on later literature and philosophy</li>
+                                    </ol>
+                                `);
+                            } else {
+                                resolve(`
+                                    <h4>English Literature</h4>
+                                    <p>English literature encompasses written works in the English language from the 7th century to present.</p>
+                                    <p>Major periods:</p>
+                                    <ul>
+                                        <li><strong>Old English (450-1066):</strong> Beowulf, Anglo-Saxon Chronicle</li>
+                                        <li><strong>Middle English (1066-1500):</strong> Chaucer's Canterbury Tales</li>
+                                        <li><strong>Renaissance (1500-1660):</strong> Shakespeare, Marlowe, Milton</li>
+                                        <li><strong>Romanticism (1785-1830):</strong> Wordsworth, Coleridge, Keats</li>
+                                        <li><strong>Victorian (1837-1901):</strong> Dickens, Bronte sisters, Tennyson</li>
+                                        <li><strong>Modernism (1901-1945):</strong> Joyce, Woolf, Eliot</li>
+                                    </ul>
+                                    <p>Key literary devices:</p>
+                                    <ol>
+                                        <li>Metaphor and simile</li>
+                                        <li>Symbolism</li>
+                                        <li>Irony (verbal, situational, dramatic)</li>
+                                        <li>Allusion</li>
+                                        <li>Foreshadowing</li>
+                                    </ol>
+                                `);
+                            }
+                        }
+                        // Default response
+                        else {
+                            resolve(`
+                                <h4>Comprehensive Answer</h4>
+                                <p>Regarding your question about <strong>"${query}"</strong>, here's a detailed explanation:</p>
+                                <p>This topic involves several important concepts that are fundamental to understanding the broader subject matter. The key aspects to consider are:</p>
+                                <ul>
+                                    <li>Historical context and development of the concept</li>
+                                    <li>Core principles and theoretical foundations</li>
+                                    <li>Practical applications and real-world examples</li>
+                                    <li>Current research directions and open questions</li>
+                                </ul>
+                                <p>Would you like me to focus on any particular aspect of this topic, or provide examples relevant to your current coursework?</p>
+                            `);
+                        }
+                    }, 1500); // Simulate processing delay
+                });
+            }
+            
+            // Process image with AI
+            async function processImageWithAI(imageData, question) {
+                try {
+                    // Show loading state
+                    responseText.innerHTML = `
+                        <div class="loading-dots">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span> Analyzing image and preparing response...
+                        </div>
+                    `;
+                    
+                    const startTime = performance.now();
+                    
+                    // In a real app, you would send this to your backend service
+                    // For demo, we'll simulate an API call
+                    const response = await simulateImageAnalysis(imageData, question);
+                    
+                    const processingDuration = ((performance.now() - startTime) / 1000).toFixed(2);
+                    processingTime.textContent = `Processed in ${processingDuration}s`;
+                    
+                    // Display the response
+                    responseText.innerHTML = response.text;
+                    if (response.image) {
+                        imageResponse.innerHTML = response.image;
+                    }
+                    
+                    // Generate a sample chart if relevant
+                    if (question.toLowerCase().includes('progress') || question.toLowerCase().includes('chart')) {
+                        generateSampleChart();
+                    }
+                    
+                } catch (err) {
+                    console.error('Error processing image:', err);
+                    responseText.innerHTML = `<p class="error">Error processing the image. Please try again.</p>`;
+                }
+            }
+            
+            // Simulate image analysis with accurate responses
+            async function simulateImageAnalysis(imageData, question) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        const lowerQuestion = question.toLowerCase();
+                        let response = {};
+                        
+                        if (lowerQuestion.includes('math') || lowerQuestion.includes('equation') || lowerQuestion.includes('calculus')) {
+                            response.text = `
+                                <h4>Mathematical Problem Analysis</h4>
+                                <p>Based on the image you've uploaded, I've identified this as a calculus problem involving integration.</p>
+                                <p>The equation appears to be: <code>∫(x² + 3x - 2)dx from 0 to 5</code></p>
+                                <p>Here's the step-by-step solution:</p>
+                                <ol>
+                                    <li>Find the antiderivative: <code>∫(x² + 3x - 2)dx = (1/3)x³ + (3/2)x² - 2x + C</code></li>
+                                    <li>Evaluate at bounds: <code>[(1/3)(5)³ + (3/2)(5)² - 2(5)] - [(1/3)(0)³ + (3/2)(0)² - 2(0)]</code></li>
+                                    <li>Calculate: <code>[125/3 + 75/2 - 10] - [0] ≈ 41.67 + 37.5 - 10 = 69.17</code></li>
+                                </ol>
+                                <p>The final answer is approximately <strong>69.17</strong>.</p>
+                                <p>Key concepts demonstrated:</p>
+                                <ul>
+                                    <li>Power rule for integration</li>
+                                    <li>Definite integral evaluation</li>
+                                    <li>Polynomial integration</li>
+                                </ul>
+                            `;
+                            response.image = `
+                                <img src="https://via.placeholder.com/600x200/3498db/ffffff?text=Integral+Visualization" alt="Integral visualization">
+                            `;
+                        } else if (lowerQuestion.includes('physics') || lowerQuestion.includes('diagram') || lowerQuestion.includes('circuit')) {
+                            response.text = `
+                                <h4>Physics Diagram Analysis</h4>
+                                <p>The image appears to show an electric circuit diagram with the following components:</p>
+                                <ul>
+                                    <li>Voltage source (battery symbol)</li>
+                                    <li>Resistors in series and parallel configuration</li>
+                                    <li>Capacitor element</li>
+                                    <li>Connecting wires forming closed loops</li>
+                                </ul>
+                                <p>Key analysis:</p>
+                                <ol>
+                                    <li>The circuit follows Kirchhoff's laws (current and voltage)</li>
+                                    <li>Total resistance can be calculated by combining series and parallel resistances</li>
+                                    <li>Time constant (τ = RC) determines charging/discharging behavior</li>
+                                    <li>Current flow direction follows conventional current (positive to negative)</li>
+                                </ol>
+                                <p>If you need help solving for specific values (current, voltage, etc.), please provide the component values.</p>
+                            `;
+                            response.image = `
+                                <img src="https://via.placeholder.com/600x200/9b59b6/ffffff?text=Circuit+Diagram+Analysis" alt="Circuit analysis">
+                            `;
+                        } else if (lowerQuestion.includes('history') || lowerQuestion.includes('map') || lowerQuestion.includes('timeline')) {
+                            response.text = `
+                                <h4>Historical Map/Timeline Analysis</h4>
+                                <p>The image appears to be a historical map showing territorial changes during a significant period.</p>
+                                <p>Key observations:</p>
+                                <ul>
+                                    <li>Shows national borders at different time periods (color-coded)</li>
+                                    <li>Includes major battle sites with dates</li>
+                                    <li>Displays migration routes or troop movements</li>
+                                    <li>Contains legend explaining symbols and colors</li>
+                                </ul>
+                                <p>Historical context:</p>
+                                <ol>
+                                    <li>Maps like this help visualize geopolitical changes</li>
+                                    <li>Can show causes and consequences of wars/treaties</li>
+                                    <li>Illustrate cultural diffusion patterns</li>
+                                    <li>Help understand resource distribution and strategic importance</li>
+                                </ol>
+                                <p>For more specific analysis, please provide the time period or region shown.</p>
+                            `;
+                            response.image = `
+                                <img src="https://via.placeholder.com/600x200/e74c3c/ffffff?text=Historical+Map+Analysis" alt="Map analysis">
+                            `;
+                        } else {
+                            response.text = `
+                                <h4>Image Analysis</h4>
+                                <p>I've analyzed the image you uploaded${question ? ` regarding "${question}"` : ''}.</p>
+                                <p>Here are the key observations:</p>
+                                <ul>
+                                    <li>The image contains both text and visual elements</li>
+                                    <li>Appears to be educational material (textbook page or lecture slide)</li>
+                                    <li>Includes diagrams, equations, and explanatory text</li>
+                                    <li>Color coding used to highlight important concepts</li>
+                                </ul>
+                                <p>For more specific analysis, please provide additional context about what you'd like to understand.</p>
+                            `;
+                            response.image = `
+                                <img src="https://via.placeholder.com/600x200/f39c12/ffffff?text=Educational+Content+Analysis" alt="Content analysis">
+                            `;
+                        }
+                        
+                        resolve(response);
+                    }, 2000); // Simulate processing delay
+                });
+            }
+            
+            // Generate a sample chart
+            function generateSampleChart() {
+                const chartContainer = document.getElementById('chart-container');
+                const canvas = document.getElementById('chart');
+                const ctx = canvas.getContext('2d');
+                
+                // Clear previous chart if it exists
+                if (sampleChart) {
+                    sampleChart.destroy();
+                }
+                
+                // Set canvas size
+                canvas.width = chartContainer.offsetWidth;
+                canvas.height = 300;
+                
+                // Sample data based on query type
+                let chartData = {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+                    datasets: [{
+                        label: 'Understanding Level',
+                        data: [45, 60, 75, 80, 90],
+                        backgroundColor: 'rgba(52, 152, 219, 0.7)',
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        borderWidth: 1,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                };
+                
+                sampleChart = new Chart(ctx, {
+                    type: 'line',
+                    data: chartData,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            title: {
+                                display: true,
+                                text: 'Learning Progress Over Time'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `Understanding: ${context.raw}%`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: 'Understanding (%)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Week of Study'
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                chartContainer.hidden = false;
+            }
+            
+            // Calculate engagement score based on face detection data
+            function calculateEngagement(detections) {
+                if (detections.length === 0) {
+                    // No face detected - likely not paying attention
+                    return 0;
+                }
+                
+                const face = detections[0];
+                const expressions = face.expressions;
+                const landmarks = face.landmarks;
+                
+                // Calculate attention score based on head position
+                const jawline = landmarks.getJawOutline();
+                const leftEye = landmarks.getLeftEye();
+                const rightEye = landmarks.getRightEye();
+                
+                // Simple heuristic for attention:
+                // 1. Check if eyes are open (based on eye landmarks)
+                // 2. Check if facing forward (jawline symmetry)
+                // 3. Check expression (neutral or positive is better than negative)
+                
+                let score = 50; // Base score
+                
+                // Eye openness - compare height to width
+                const leftEyeHeight = Math.abs(leftEye[1].y - leftEye[5].y);
+                const leftEyeWidth = Math.abs(leftEye[3].x - leftEye[0].x);
+                const leftEyeRatio = leftEyeHeight / leftEyeWidth;
+                
+                const rightEyeHeight = Math.abs(rightEye[1].y - rightEye[5].y);
+                const rightEyeWidth = Math.abs(rightEye[3].x - rightEye[0].x);
+                const rightEyeRatio = rightEyeHeight / rightEyeWidth;
+                
+                const eyeOpenThreshold = 0.25; // Empirical value
+                if (leftEyeRatio > eyeOpenThreshold && rightEyeRatio > eyeOpenThreshold) {
+                    score += 20; // Eyes open
+                } else {
+                    score -= 15; // Eyes closed or squinting
+                }
+                
+                // Head position - compare jawline points
+                const jawWidth = jawline[16].x - jawline[0].x;
+                const jawLeft = jawline[0].x;
+                const jawRight = jawline[16].x;
+                const noseX = landmarks.getNose()[6].x;
+                
+                // Nose should be centered in jaw
+                const nosePosition = (noseX - jawLeft) / jawWidth;
+                if (nosePosition > 0.4 && nosePosition < 0.6) {
+                    score += 15; // Facing forward
+                } else {
+                    score -= 10; // Looking sideways
+                }
+                
+                // Expression analysis
+                const dominantExpression = Object.entries(expressions)
+                    .reduce((a, b) => a[1] > b[1] ? a : b)[0];
+                
+                // Positive expressions increase score
+                if (dominantExpression === 'neutral') {
+                    score += 5;
+                } else if (dominantExpression === 'happy') {
+                    score += 10;
+                } else if (dominantExpression === 'sad' || dominantExpression === 'angry') {
+                    score -= 10;
+                }
+                
+                // Ensure score is between 0 and 100
+                return Math.min(100, Math.max(0, score));
+            }
+            
+            // Update engagement meter and history
+            function updateEngagementDisplay(score) {
+                // Add to history (for smoothing)
+                engagementHistory.push(score);
+                if (engagementHistory.length > MAX_HISTORY) {
+                    engagementHistory.shift();
+                }
+                
+                // Calculate smoothed score
+                const smoothedScore = engagementHistory.reduce((a, b) => a + b, 0) / engagementHistory.length;
+                
+                // Update meter
+                engagementLevel.style.width = `${smoothedScore}%`;
+                
+                // Update color based on engagement level
+                if (smoothedScore > 70) {
+                    engagementLevel.style.backgroundColor = 'var(--success-color)';
+                    document.getElementById('engagement-status').textContent = 'Highly engaged - excellent focus!';
+                } else if (smoothedScore > 40) {
+                    engagementLevel.style.backgroundColor = 'var(--warning-color)';
+                    document.getElementById('engagement-status').textContent = 'Moderately engaged - try to focus more';
+                } else {
+                    engagementLevel.style.backgroundColor = 'var(--danger-color)';
+                    document.getElementById('engagement-status').textContent = 'Low engagement - are you distracted?';
+                }
+            }
             
             // Handle join buttons
             joinButtons.forEach(button => {
@@ -888,11 +2123,9 @@
                 if (isMuted) {
                     muteBtn.innerHTML = '<i class="fas fa-microphone-slash"></i> Unmute';
                     muteBtn.classList.add('active');
-                    // In real app, mute the audio stream
                 } else {
                     muteBtn.innerHTML = '<i class="fas fa-microphone"></i> Mute';
                     muteBtn.classList.remove('active');
-                    // In real app, unmute the audio stream
                 }
             });
             
@@ -902,50 +2135,101 @@
                 if (isVideoOff) {
                     videoBtn.innerHTML = '<i class="fas fa-video-slash"></i> Start Video';
                     videoBtn.classList.add('active');
-                    // In real app, stop the video stream
                 } else {
                     videoBtn.innerHTML = '<i class="fas fa-video"></i> Stop Video';
                     videoBtn.classList.remove('active');
-                    // In real app, start the video stream
                 }
             });
             
             // Share screen button
             shareBtn.addEventListener('click', function() {
-                screenShareOverlay.style.display = 'flex';
+                if (isSharingScreen) {
+                    stopScreenSharing();
+                } else {
+                    screenShareOverlay.style.display = 'flex';
+                }
             });
             
             // Screen share options
             shareEntireScreen.addEventListener('click', function() {
-                isSharingScreen = true;
-                shareBtn.innerHTML = '<i class="fas fa-share-square"></i> Stop Sharing';
-                shareBtn.classList.add('active');
-                screenShareOverlay.style.display = 'none';
-                // In real app, start screen sharing
-                alert('Screen sharing started (simulated)');
+                startScreenSharing('entire-screen');
             });
             
             shareApplicationWindow.addEventListener('click', function() {
-                isSharingScreen = true;
-                shareBtn.innerHTML = '<i class="fas fa-share-square"></i> Stop Sharing';
-                shareBtn.classList.add('active');
-                screenShareOverlay.style.display = 'none';
-                // In real app, start application window sharing
-                alert('Application window sharing started (simulated)');
+                startScreenSharing('window');
             });
             
             shareBrowserTab.addEventListener('click', function() {
-                isSharingScreen = true;
-                shareBtn.innerHTML = '<i class="fas fa-share-square"></i> Stop Sharing';
-                shareBtn.classList.add('active');
-                screenShareOverlay.style.display = 'none';
-                // In real app, start browser tab sharing
-                alert('Browser tab sharing started (simulated)');
+                startScreenSharing('browser');
             });
             
             cancelShare.addEventListener('click', function() {
                 screenShareOverlay.style.display = 'none';
             });
+            
+            // Start screen sharing
+            async function startScreenSharing(option) {
+                try {
+                    screenShareOverlay.style.display = 'none';
+                    
+                    // Get screen sharing stream
+                    const constraints = {
+                        video: {
+                            displaySurface: option === 'browser' ? 'browser' : 
+                                          option === 'window' ? 'window' : 'monitor'
+                        }
+                    };
+                    
+                    // In a real app, you would use:
+                    // screenStream = await navigator.mediaDevices.getDisplayMedia(constraints);
+                    
+                    // For demo purposes, we'll simulate this
+                    console.log(`Starting screen sharing: ${option}`);
+                    isSharingScreen = true;
+                    shareBtn.innerHTML = '<i class="fas fa-share-square"></i> Stop Sharing';
+                    shareBtn.classList.add('active');
+                    
+                    // Hide the class video and show screen share video
+                    classVideo.style.display = 'none';
+                    screenShareVideo.style.display = 'block';
+                    
+                    // In a real implementation, you would:
+                    // 1. Get the screen stream
+                    // 2. Add it to your WebRTC connection
+                    // 3. Display it in the screenShareVideo element
+                    
+                    // For demo, we'll just show a placeholder
+                    screenShareVideo.src = 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4';
+                    screenShareVideo.play().catch(e => console.log('Autoplay prevented:', e));
+                    
+                } catch (err) {
+                    console.error('Error starting screen sharing:', err);
+                    alert('Screen sharing failed. Please try again.');
+                }
+            }
+            
+            // Stop screen sharing
+            function stopScreenSharing() {
+                if (!isSharingScreen) return;
+                
+                // In a real app, you would:
+                // 1. Stop all tracks in the screenStream
+                // 2. Remove the stream from your WebRTC connection
+                // 3. Clean up resources
+                
+                console.log('Stopping screen sharing');
+                isSharingScreen = false;
+                shareBtn.innerHTML = '<i class="fas fa-share-square"></i> Share Screen';
+                shareBtn.classList.remove('active');
+                
+                // Show the class video and hide screen share video
+                classVideo.style.display = 'block';
+                screenShareVideo.style.display = 'none';
+                
+                // Stop the video
+                screenShareVideo.pause();
+                screenShareVideo.src = '';
+            }
             
             // Chat button
             chatBtn.addEventListener('click', function() {
@@ -1001,6 +2285,176 @@
                 }
             });
             
+            // AI Tool Selection
+            aiToolBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tool = this.dataset.tool;
+                    switchTool(tool);
+                });
+            });
+
+            function switchTool(tool) {
+                currentTool = tool;
+                
+                // Update active button
+                aiToolBtns.forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.tool === tool);
+                });
+                
+                // Show the corresponding panel
+                queryPanels.forEach(panel => {
+                    panel.classList.toggle('active', panel.id === `${tool}-query-panel`);
+                });
+            }
+
+            // Image Upload Handling
+            uploadArea.addEventListener('click', function(e) {
+                if (e.target.tagName !== 'INPUT') {
+                    imageUpload.click();
+                }
+            });
+
+            // Drag and drop for image upload
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('drag-over');
+            });
+
+            uploadArea.addEventListener('dragleave', function() {
+                this.classList.remove('drag-over');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('drag-over');
+                
+                if (e.dataTransfer.files.length) {
+                    handleImageUpload(e.dataTransfer.files[0]);
+                }
+            });
+
+            imageUpload.addEventListener('change', function() {
+                if (this.files.length) {
+                    handleImageUpload(this.files[0]);
+                }
+            });
+
+            function handleImageUpload(file) {
+                if (!file.type.match('image.*')) {
+                    alert('Please select an image file');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedImage = e.target.result;
+                    imagePreview.innerHTML = `<img src="${selectedImage}" alt="Uploaded preview">`;
+                    imagePreview.style.display = 'block';
+                    uploadArea.querySelector('p').style.display = 'none';
+                    uploadArea.querySelector('i').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+
+            // Submit Image Query
+            submitImageBtn.addEventListener('click', function() {
+                if (!selectedImage) {
+                    alert('Please upload an image first');
+                    return;
+                }
+                
+                imageQuestion = document.getElementById('image-question').value;
+                processImageWithAI(selectedImage, imageQuestion);
+            });
+
+            // Submit Text Query
+            submitTextBtn.addEventListener('click', function() {
+                const query = document.getElementById('text-query').value.trim();
+                if (!query) {
+                    alert('Please enter your question');
+                    return;
+                }
+                
+                processTextQueryWithAI(query);
+            });
+
+            // Voice Query Handling
+            startVoiceBtn.addEventListener('click', startVoiceRecognition);
+            stopVoiceBtn.addEventListener('click', stopVoiceRecognition);
+
+            function startVoiceRecognition() {
+                if ('webkitSpeechRecognition' in window) {
+                    recognition = new webkitSpeechRecognition();
+                    recognition.continuous = false;
+                    recognition.interimResults = false;
+                    recognition.lang = 'en-US';
+                    
+                    recognition.onstart = function() {
+                        voiceStatus.textContent = 'Listening... Speak now';
+                        voiceTranscript.textContent = '';
+                        startVoiceBtn.disabled = true;
+                        stopVoiceBtn.disabled = false;
+                    };
+                    
+                    recognition.onresult = function(event) {
+                        const transcript = event.results[0][0].transcript;
+                        voiceTranscript.textContent = transcript;
+                        voiceStatus.textContent = 'Voice query captured';
+                        
+                        // Process the voice query
+                        processTextQueryWithAI(transcript);
+                    };
+                    
+                    recognition.onerror = function(event) {
+                        voiceStatus.textContent = 'Error: ' + event.error;
+                        startVoiceBtn.disabled = false;
+                        stopVoiceBtn.disabled = true;
+                    };
+                    
+                    recognition.onend = function() {
+                        startVoiceBtn.disabled = false;
+                        stopVoiceBtn.disabled = true;
+                    };
+                    
+                    recognition.start();
+                } else {
+                    voiceStatus.textContent = 'Voice recognition not supported in this browser';
+                }
+            }
+
+            function stopVoiceRecognition() {
+                if (recognition) {
+                    recognition.stop();
+                }
+            }
+
+            // Response Actions
+            copyResponseBtn.addEventListener('click', function() {
+                const range = document.createRange();
+                range.selectNode(responseText);
+                window.getSelection().removeAllRanges();
+                window.getSelection().addRange(range);
+                document.execCommand('copy');
+                window.getSelection().removeAllRanges();
+                
+                // Show copied feedback
+                const originalText = copyResponseBtn.innerHTML;
+                copyResponseBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => {
+                    copyResponseBtn.innerHTML = originalText;
+                }, 2000);
+            });
+
+            clearResponseBtn.addEventListener('click', function() {
+                responseText.textContent = '';
+                imageResponse.innerHTML = '';
+                processingTime.textContent = '';
+                if (sampleChart) {
+                    sampleChart.destroy();
+                    document.getElementById('chart-container').hidden = true;
+                }
+            });
+
             // Functions
             function closeClassroomSession() {
                 classroomModal.style.display = 'none';
@@ -1020,10 +2474,24 @@
                     recognition.stop();
                 }
                 
+                // Stop screen sharing if active
+                if (isSharingScreen) {
+                    stopScreenSharing();
+                }
+                
+                // Clear face detection interval
+                if (faceDetectionInterval) {
+                    clearInterval(faceDetectionInterval);
+                    faceDetectionInterval = null;
+                }
+                
                 // Reset video
                 classVideo.pause();
                 classVideo.removeAttribute('src');
                 classVideo.load();
+                
+                // Clear AI responses
+                clearResponseBtn.click();
             }
             
             function resetControls() {
@@ -1081,13 +2549,14 @@
                     chatMessages.appendChild(messageDiv);
                     chatInput.value = '';
                     chatMessages.scrollTop = chatMessages.scrollHeight;
-                    
-                    // In real app, send message to server
                 }
             }
             
             // Initialize AI Assistant components
             function initializeAIAssistant() {
+                // Initialize AI models
+                initializeAIModels();
+                
                 // Load face detection models
                 Promise.all([
                     faceapi.nets.tinyFaceDetector.loadFromUri('static/models'),
@@ -1095,14 +2564,14 @@
                     faceapi.nets.faceRecognitionNet.loadFromUri('static/models'),
                     faceapi.nets.faceExpressionNet.loadFromUri('static/models')
                 ]).then(() => {
-                    document.getElementById('model-status').textContent = 'Models loaded';
+                    document.getElementById('model-status').textContent = 'Face detection models loaded';
                     startVideo();
                 }).catch(err => {
-                    console.error('Error loading models:', err);
-                    document.getElementById('model-status').textContent = 'Error loading models';
+                    console.error('Error loading face models:', err);
+                    document.getElementById('model-status').textContent = 'Error loading face models';
                 });
                 
-                // Setup video stream
+                // Setup video stream for engagement detection
                 function startVideo() {
                     navigator.mediaDevices.getUserMedia({ video: true })
                         .then(stream => {
@@ -1118,120 +2587,51 @@
                         });
                 }
                 
-                // Face detection function
+                // Face detection function with engagement scoring
                 function detectFaces() {
                     const video = document.getElementById('video');
-                    const canvas = faceapi.createCanvasFromMedia(video);
-                    document.getElementById('face-data').appendChild(canvas);
+                    const canvas = document.getElementById('face-canvas');
                     
+                    // Match canvas size to video
                     const displaySize = { width: video.width, height: video.height };
+                    canvas.width = displaySize.width;
+                    canvas.height = displaySize.height;
+                    
                     faceapi.matchDimensions(canvas, displaySize);
                     
-                    setInterval(async () => {
-                        const detections = await faceapi.detectAllFaces(video, 
-                            new faceapi.TinyFaceDetectorOptions())
-                            .withFaceLandmarks()
-                            .withFaceExpressions();
-                        
-                        const resizedDetections = faceapi.resizeResults(detections, displaySize);
-                        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-                        faceapi.draw.drawDetections(canvas, resizedDetections);
-                        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
-                        faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
-                        
-                        // Update engagement status
-                        if (detections.length > 0) {
-                            const expressions = detections[0].expressions;
-                            const dominantExpression = Object.entries(expressions)
-                                .reduce((a, b) => a[1] > b[1] ? a : b)[0];
+                    // Start detection loop
+                    faceDetectionInterval = setInterval(async () => {
+                        try {
+                            const detections = await faceapi.detectAllFaces(video, 
+                                new faceapi.TinyFaceDetectorOptions())
+                                .withFaceLandmarks()
+                                .withFaceExpressions();
                             
-                            document.getElementById('engagement-status').textContent = 
-                                `Detected: ${dominantExpression} expression`;
-                        } else {
-                            document.getElementById('engagement-status').textContent = 
-                                'No face detected';
+                            const resizedDetections = faceapi.resizeResults(detections, displaySize);
+                            const ctx = canvas.getContext('2d');
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            
+                            // Draw detections
+                            faceapi.draw.drawDetections(canvas, resizedDetections);
+                            faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+                            faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
+                            
+                            // Calculate and update engagement score
+                            if (detections.length > 0) {
+                                const score = calculateEngagement(detections);
+                                updateEngagementDisplay(score);
+                                lastFaceDetectedTime = Date.now();
+                            } else {
+                                // No face detected for a while - assume disengaged
+                                if (Date.now() - lastFaceDetectedTime > 3000) {
+                                    updateEngagementDisplay(0);
+                                }
+                            }
+                        } catch (err) {
+                            console.error('Face detection error:', err);
                         }
-                    }, 100);
+                    }, 500); // Run twice per second for smoother updates
                 }
-                
-                // Voice recognition setup
-                const startVoiceBtn = document.getElementById('start-voice');
-                const stopVoiceBtn = document.getElementById('stop-voice');
-                const voiceStatus = document.getElementById('voice-status');
-                const textQuery = document.getElementById('text-query');
-                
-                if (startVoiceBtn) {
-                    startVoiceBtn.addEventListener('click', startVoiceRecognition);
-                    stopVoiceBtn.addEventListener('click', stopVoiceRecognition);
-                }
-                
-                function startVoiceRecognition() {
-                    if ('webkitSpeechRecognition' in window) {
-                        recognition = new webkitSpeechRecognition();
-                        recognition.continuous = false;
-                        recognition.interimResults = false;
-                        
-                        recognition.onstart = function() {
-                            voiceStatus.textContent = 'Listening... Speak now';
-                            startVoiceBtn.style.display = 'none';
-                            stopVoiceBtn.style.display = 'block';
-                        };
-                        
-                        recognition.onresult = function(event) {
-                            const transcript = event.results[0][0].transcript;
-                            textQuery.value = transcript;
-                            voiceStatus.textContent = 'Voice query captured';
-                            
-                            // Automatically submit the query
-                            setTimeout(() => {
-                                document.getElementById('submit-text').click();
-                            }, 500);
-                        };
-                        
-                        recognition.onerror = function(event) {
-                            voiceStatus.textContent = 'Error occurred in recognition: ' + event.error;
-                            startVoiceBtn.style.display = 'block';
-                            stopVoiceBtn.style.display = 'none';
-                        };
-                        
-                        recognition.onend = function() {
-                            startVoiceBtn.style.display = 'block';
-                            stopVoiceBtn.style.display = 'none';
-                        };
-                        
-                        recognition.start();
-                    } else {
-                        voiceStatus.textContent = 'Voice recognition not supported in this browser';
-                    }
-                }
-                
-                function stopVoiceRecognition() {
-                    if (recognition) {
-                        recognition.stop();
-                    }
-                }
-                
-                // Text query handling
-                document.getElementById('submit-text')?.addEventListener('click', function() {
-                    const query = document.getElementById('text-query').value;
-                    if (query.trim()) {
-                        document.getElementById('response-text').textContent = 
-                            `Processing your query about "${query}"...`;
-                        
-                        // Simulate AI response after a delay
-                        setTimeout(() => {
-                            const responses = [
-                                `The concept you're asking about relates to fundamental principles in this subject. Would you like me to provide more detailed explanations or examples?`,
-                                `Based on your question, I recommend reviewing chapter 3 of your textbook which covers this topic extensively.`,
-                                `That's an excellent question! Here's a breakdown of the key concepts related to your query...`,
-                                `I've analyzed your question and found several relevant resources that might help. Would you like me to share them?`
-                            ];
-                            
-                            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                            document.getElementById('response-text').textContent = randomResponse;
-                        }, 1500);
-                    }
-                });
             }
         });
     </script>
