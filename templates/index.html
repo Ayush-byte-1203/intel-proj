@@ -6,6 +6,448 @@
     <title>EduConnect - Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="static/css/style.css">
+    <style>
+        /* Classroom Modal Styles */
+        .classroom-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 1000;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+        
+        .classroom-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+        
+        .classroom-header {
+            padding: 15px 20px;
+            background-color: #2c3e50;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .classroom-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .classroom-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .classroom-ai-section {
+            width: 350px;
+            border-right: 1px solid #ddd;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .classroom-video-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #1a1a1a;
+            position: relative;
+        }
+        
+        .video-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background-color: #000;
+        }
+        
+        #classVideo {
+            width: 100%;
+            height: 100%;
+            max-height: calc(100vh - 120px);
+            object-fit: contain;
+        }
+        
+        .close-classroom {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+        
+        .close-classroom:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        .class-controls {
+            display: flex;
+            gap: 10px;
+            padding: 15px;
+            background-color: #2c3e50;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .control-btn {
+            background-color: #3a5169;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .control-btn:hover {
+            background-color: #4a6b8a;
+            transform: translateY(-2px);
+        }
+        
+        .control-btn.active {
+            background-color: #1abc9c;
+        }
+        
+        .control-btn.danger {
+            background-color: #e74c3c;
+        }
+        
+        .control-btn.danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .control-btn i {
+            font-size: 16px;
+        }
+        
+        /* AI Section Styles */
+        #input-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f5f7fa;
+            border-radius: 8px;
+        }
+        
+        #input-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        #text-query {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+        
+        #submit-text, #start-voice, #stop-voice {
+            width: 100%;
+            margin-bottom: 8px;
+        }
+        
+        #voice-status {
+            font-size: 13px;
+            color: #7f8c8d;
+            text-align: center;
+            margin-top: 5px;
+        }
+        
+        #camera-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f5f7fa;
+            border-radius: 8px;
+        }
+        
+        #camera-section h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        #video {
+            width: 100%;
+            border-radius: 4px;
+            background-color: #000;
+            margin-bottom: 10px;
+        }
+        
+        #engagement-status, #model-status {
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+        
+        #response-section {
+            flex: 1;
+            padding: 15px;
+            background-color: #f5f7fa;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #response-section label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        #response-text {
+            flex: 1;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: white;
+            border-radius: 4px;
+            overflow-y: auto;
+            min-height: 150px;
+            line-height: 1.5;
+        }
+        
+        #ai-source {
+            font-size: 12px;
+            color: #7f8c8d;
+            text-align: right;
+        }
+        
+        /* Participant List */
+        .participant-list {
+            position: absolute;
+            right: -350px;
+            top: 0;
+            width: 350px;
+            height: 100%;
+            background-color: white;
+            border-left: 1px solid #ddd;
+            transition: right 0.3s ease;
+            z-index: 10;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        .participant-list.show {
+            right: 0;
+        }
+        
+        .participant-list h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .participant-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .participant-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .participant-name {
+            flex: 1;
+        }
+        
+        /* Chat Panel */
+        .chat-panel {
+            position: absolute;
+            right: -350px;
+            top: 0;
+            width: 350px;
+            height: 100%;
+            background-color: white;
+            border-left: 1px solid #ddd;
+            transition: right 0.3s ease;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-panel.show {
+            right: 0;
+        }
+        
+        .chat-header {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+        }
+        
+        .chat-input {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .chat-input button {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+        }
+        
+        .message-sender {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .message-content {
+            background-color: #f5f7fa;
+            padding: 8px 12px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        /* Screen Sharing Overlay */
+        .screen-share-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            display: none;
+        }
+        
+        .screen-share-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 800px;
+        }
+        
+        .screen-share-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .screen-option {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .screen-option:hover {
+            border-color: #3498db;
+            background-color: #f5f7fa;
+        }
+        
+        .screen-option i {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 1200px) {
+            .classroom-ai-section {
+                width: 300px;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .classroom-content {
+                flex-direction: column;
+            }
+            
+            .classroom-ai-section {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #ddd;
+                max-height: 300px;
+                overflow-y: auto;
+            }
+            
+            .participant-list, .chat-panel {
+                width: 100%;
+                right: -100%;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -36,31 +478,31 @@
                     </a>
                 </li>
                 <li>
-                    <a href="courses.html" class="menu-item">
+                    <a href="course.html" class="menu-item">
                         <i class="fas fa-book"></i>
                         <span>Courses</span>
                     </a>
                 </li>
                 <li>
-                    <a href="assignments.html" class="menu-item">
+                    <a href="assignment.html" class="menu-item">
                         <i class="fas fa-tasks"></i>
                         <span>Assignments</span>
                     </a>
                 </li>
                 <li>
-                    <a href="resources.html" class="menu-item">
+                    <a href="resource.html" class="menu-item">
                         <i class="fas fa-file-alt"></i>
                         <span>Resources</span>
                     </a>
                 </li>
                 <li>
-                    <a href="classmates.html" class="menu-item">
+                    <a href="classmate.html" class="menu-item">
                         <i class="fas fa-users"></i>
                         <span>Classmates</span>
                     </a>
                 </li>
                 <li>
-                    <a href="grades.html" class="menu-item">
+                    <a href="grade.html" class="menu-item">
                         <i class="fas fa-chart-line"></i>
                         <span>Grades</span>
                     </a>
@@ -69,7 +511,7 @@
                 <li class="divider"></li>
                 
                 <li>
-                    <a href="settings.html" class="menu-item">
+                    <a href="setting.html" class="menu-item">
                         <i class="fas fa-cog"></i>
                         <span>Settings</span>
                     </a>
@@ -111,7 +553,7 @@
                             <button class="btn btn-sm btn-outline">
                                 <i class="fas fa-info-circle"></i> Details
                             </button>
-                            <button class="btn btn-sm btn-join">
+                            <button class="btn btn-sm btn-join" data-class="Advanced Mathematics" data-teacher="Prof. Sarah Johnson">
                                 <i class="fas fa-video"></i> Join
                             </button>
                         </div>
@@ -131,7 +573,7 @@
                             <button class="btn btn-sm btn-outline">
                                 <i class="fas fa-info-circle"></i> Details
                             </button>
-                            <button class="btn btn-sm btn-join">
+                            <button class="btn btn-sm btn-join" data-class="Physics 101" data-teacher="Dr. Michael Chen">
                                 <i class="fas fa-video"></i> Join
                             </button>
                         </div>
@@ -151,7 +593,7 @@
                             <button class="btn btn-sm btn-outline">
                                 <i class="fas fa-info-circle"></i> Details
                             </button>
-                            <button class="btn btn-sm btn-join">
+                            <button class="btn btn-sm btn-join" data-class="World History" data-teacher="Prof. Robert Williams">
                                 <i class="fas fa-video"></i> Join
                             </button>
                         </div>
@@ -171,7 +613,7 @@
                             <button class="btn btn-sm btn-outline">
                                 <i class="fas fa-info-circle"></i> Details
                             </button>
-                            <button class="btn btn-sm btn-join">
+                            <button class="btn btn-sm btn-join" data-class="English Literature" data-teacher="Dr. Emily Parker">
                                 <i class="fas fa-video"></i> Join
                             </button>
                         </div>
@@ -194,7 +636,7 @@
                                 <p>Linear Algebra - Chapter 5</p>
                             </div>
                         </div>
-                        <button class="btn btn-join">
+                        <button class="btn btn-join" data-class="Advanced Mathematics" data-teacher="Prof. Sarah Johnson">
                             <i class="fas fa-video"></i> Join Class
                         </button>
                     </div>
@@ -228,5 +670,570 @@
             </div>
         </main>
     </div>
+
+    <!-- Classroom Modal -->
+    <div id="classroomModal" class="classroom-modal">
+        <div class="classroom-container">
+            <div class="classroom-header">
+                <h2 id="classroomTitle">Classroom Session</h2>
+                <button class="close-classroom" id="closeClassroom">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="classroom-content">
+                <div class="classroom-ai-section">
+                    <!-- AI Assistant Section -->
+                    <section id="input-section" aria-label="Query Input Section">
+                        <label for="text-query">Ask a Question or Enter Query:</label>
+                        <textarea id="text-query" placeholder="Type your question here..."></textarea>
+                        <button id="submit-text" class="btn btn-primary">Submit Query</button>
+                        <button id="start-voice" class="btn btn-outline">🎙️ Start Voice Query</button>
+                        <button id="stop-voice" class="btn btn-outline" style="display:none;">⏹️ Stop Voice Query</button>
+                        <div id="voice-status" aria-live="polite"></div>
+                    </section>
+
+                    <section id="camera-section" aria-label="Camera and Engagement Monitoring Section">
+                        <h3>Engagement Monitoring</h3>
+                        <video id="video" width="100%" height="240" autoplay muted playsinline></video>
+                        <div id="engagement-status" aria-live="polite" aria-atomic="true">Initializing camera...</div>
+                        <div id="model-status">Loading models...</div>
+                        <div id="face-data" hidden></div>
+                    </section>
+
+                    <section id="response-section" aria-label="Response Display Section">
+                        <label>AI Response:</label>
+                        <div id="response-text" role="region" aria-live="polite" aria-atomic="true"></div>
+                        <div id="chart-container" hidden>
+                            <canvas id="chart" aria-label="Visual Aid Chart"></canvas>
+                        </div>
+                        <div id="ai-source" class="source-indicator">Using local Qwen1.5-7B model</div>
+                    </section>
+                </div>
+                <div class="classroom-video-section">
+                    <div class="video-container">
+                        <video id="classVideo" width="100%" height="auto" controls autoplay>
+                            <source src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="class-controls">
+                        <button id="muteBtn" class="control-btn">
+                            <i class="fas fa-microphone"></i> Mute
+                        </button>
+                        <button id="videoBtn" class="control-btn">
+                            <i class="fas fa-video"></i> Stop Video
+                        </button>
+                        <button id="shareBtn" class="control-btn">
+                            <i class="fas fa-share-square"></i> Share Screen
+                        </button>
+                        <button id="chatBtn" class="control-btn">
+                            <i class="fas fa-comments"></i> Chat
+                        </button>
+                        <button id="participantBtn" class="control-btn">
+                            <i class="fas fa-users"></i> Participants
+                        </button>
+                        <button id="leaveBtn" class="control-btn danger">
+                            <i class="fas fa-phone-slash"></i> Leave
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Participant List -->
+                <div class="participant-list" id="participantList">
+                    <h3>Participants (4)</h3>
+                    <div class="participant-item">
+                        <div class="participant-avatar" style="background-color: #3498db;">PJ</div>
+                        <div class="participant-name">Prof. Sarah Johnson (Host)</div>
+                    </div>
+                    <div class="participant-item">
+                        <div class="participant-avatar" style="background-color: #e74c3c;">JD</div>
+                        <div class="participant-name">John Doe (You)</div>
+                    </div>
+                    <div class="participant-item">
+                        <div class="participant-avatar" style="background-color: #2ecc71;">MS</div>
+                        <div class="participant-name">Maria Smith</div>
+                    </div>
+                    <div class="participant-item">
+                        <div class="participant-avatar" style="background-color: #f39c12;">AB</div>
+                        <div class="participant-name">Alex Brown</div>
+                    </div>
+                </div>
+                
+                <!-- Chat Panel -->
+                <div class="chat-panel" id="chatPanel">
+                    <div class="chat-header">
+                        <h3>Class Chat</h3>
+                        <button id="closeChat" class="close-classroom" style="color: #2c3e50;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="chat-messages">
+                        <div class="message">
+                            <div class="message-sender">Prof. Johnson</div>
+                            <div class="message-content">Welcome everyone to today's class on Linear Algebra!</div>
+                        </div>
+                        <div class="message">
+                            <div class="message-sender">Maria Smith</div>
+                            <div class="message-content">Good morning professor!</div>
+                        </div>
+                        <div class="message">
+                            <div class="message-sender">You</div>
+                            <div class="message-content">Hello everyone, excited for today's lesson</div>
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="chatInput" placeholder="Type your message...">
+                        <button id="sendChat">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Screen Sharing Overlay -->
+    <div class="screen-share-overlay" id="screenShareOverlay">
+        <div class="screen-share-container">
+            <h3>Share Your Screen</h3>
+            <p>Select what you'd like to share with the class</p>
+            <div class="screen-share-options">
+                <div class="screen-option" id="shareEntireScreen">
+                    <i class="fas fa-desktop"></i>
+                    <span>Entire Screen</span>
+                </div>
+                <div class="screen-option" id="shareApplicationWindow">
+                    <i class="fas fa-window-maximize"></i>
+                    <span>Application Window</span>
+                </div>
+                <div class="screen-option" id="shareBrowserTab">
+                    <i class="fas fa-window-restore"></i>
+                    <span>Browser Tab</span>
+                </div>
+                <div class="screen-option" id="cancelShare">
+                    <i class="fas fa-times"></i>
+                    <span>Cancel</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script>
+        // Classroom join functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const joinButtons = document.querySelectorAll('.btn-join');
+            const classroomModal = document.getElementById('classroomModal');
+            const closeClassroom = document.getElementById('closeClassroom');
+            const classroomTitle = document.getElementById('classroomTitle');
+            const classVideo = document.getElementById('classVideo');
+            const muteBtn = document.getElementById('muteBtn');
+            const videoBtn = document.getElementById('videoBtn');
+            const shareBtn = document.getElementById('shareBtn');
+            const chatBtn = document.getElementById('chatBtn');
+            const participantBtn = document.getElementById('participantBtn');
+            const leaveBtn = document.getElementById('leaveBtn');
+            const participantList = document.getElementById('participantList');
+            const chatPanel = document.getElementById('chatPanel');
+            const closeChat = document.getElementById('closeChat');
+            const chatInput = document.getElementById('chatInput');
+            const sendChat = document.getElementById('sendChat');
+            const screenShareOverlay = document.getElementById('screenShareOverlay');
+            const shareEntireScreen = document.getElementById('shareEntireScreen');
+            const shareApplicationWindow = document.getElementById('shareApplicationWindow');
+            const shareBrowserTab = document.getElementById('shareBrowserTab');
+            const cancelShare = document.getElementById('cancelShare');
+            
+            // State variables
+            let isMuted = false;
+            let isVideoOff = false;
+            let isSharingScreen = false;
+            let isChatOpen = false;
+            let isParticipantsOpen = false;
+            let recognition = null;
+            
+            // Handle join buttons
+            joinButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const className = this.getAttribute('data-class');
+                    const teacher = this.getAttribute('data-teacher');
+                    
+                    classroomTitle.textContent = `${className} with ${teacher}`;
+                    classroomModal.style.display = 'block';
+                    
+                    // Initialize AI components
+                    initializeAIAssistant();
+                    
+                    // Load class video (simulated)
+                    loadClassVideo(className);
+                    
+                    // Reset controls
+                    resetControls();
+                });
+            });
+            
+            // Close classroom modal
+            closeClassroom.addEventListener('click', function() {
+                closeClassroomSession();
+            });
+            
+            // Leave button
+            leaveBtn.addEventListener('click', function() {
+                closeClassroomSession();
+            });
+            
+            // Mute button
+            muteBtn.addEventListener('click', function() {
+                isMuted = !isMuted;
+                if (isMuted) {
+                    muteBtn.innerHTML = '<i class="fas fa-microphone-slash"></i> Unmute';
+                    muteBtn.classList.add('active');
+                    // In real app, mute the audio stream
+                } else {
+                    muteBtn.innerHTML = '<i class="fas fa-microphone"></i> Mute';
+                    muteBtn.classList.remove('active');
+                    // In real app, unmute the audio stream
+                }
+            });
+            
+            // Video button
+            videoBtn.addEventListener('click', function() {
+                isVideoOff = !isVideoOff;
+                if (isVideoOff) {
+                    videoBtn.innerHTML = '<i class="fas fa-video-slash"></i> Start Video';
+                    videoBtn.classList.add('active');
+                    // In real app, stop the video stream
+                } else {
+                    videoBtn.innerHTML = '<i class="fas fa-video"></i> Stop Video';
+                    videoBtn.classList.remove('active');
+                    // In real app, start the video stream
+                }
+            });
+            
+            // Share screen button
+            shareBtn.addEventListener('click', function() {
+                screenShareOverlay.style.display = 'flex';
+            });
+            
+            // Screen share options
+            shareEntireScreen.addEventListener('click', function() {
+                isSharingScreen = true;
+                shareBtn.innerHTML = '<i class="fas fa-share-square"></i> Stop Sharing';
+                shareBtn.classList.add('active');
+                screenShareOverlay.style.display = 'none';
+                // In real app, start screen sharing
+                alert('Screen sharing started (simulated)');
+            });
+            
+            shareApplicationWindow.addEventListener('click', function() {
+                isSharingScreen = true;
+                shareBtn.innerHTML = '<i class="fas fa-share-square"></i> Stop Sharing';
+                shareBtn.classList.add('active');
+                screenShareOverlay.style.display = 'none';
+                // In real app, start application window sharing
+                alert('Application window sharing started (simulated)');
+            });
+            
+            shareBrowserTab.addEventListener('click', function() {
+                isSharingScreen = true;
+                shareBtn.innerHTML = '<i class="fas fa-share-square"></i> Stop Sharing';
+                shareBtn.classList.add('active');
+                screenShareOverlay.style.display = 'none';
+                // In real app, start browser tab sharing
+                alert('Browser tab sharing started (simulated)');
+            });
+            
+            cancelShare.addEventListener('click', function() {
+                screenShareOverlay.style.display = 'none';
+            });
+            
+            // Chat button
+            chatBtn.addEventListener('click', function() {
+                if (isParticipantsOpen) {
+                    participantList.classList.remove('show');
+                    isParticipantsOpen = false;
+                }
+                
+                isChatOpen = !isChatOpen;
+                if (isChatOpen) {
+                    chatPanel.classList.add('show');
+                } else {
+                    chatPanel.classList.remove('show');
+                }
+            });
+            
+            // Close chat
+            closeChat.addEventListener('click', function() {
+                chatPanel.classList.remove('show');
+                isChatOpen = false;
+            });
+            
+            // Send chat message
+            sendChat.addEventListener('click', function() {
+                sendMessage();
+            });
+            
+            chatInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // Participants button
+            participantBtn.addEventListener('click', function() {
+                if (isChatOpen) {
+                    chatPanel.classList.remove('show');
+                    isChatOpen = false;
+                }
+                
+                isParticipantsOpen = !isParticipantsOpen;
+                if (isParticipantsOpen) {
+                    participantList.classList.add('show');
+                } else {
+                    participantList.classList.remove('show');
+                }
+            });
+            
+            // Close screen share overlay when clicking outside
+            screenShareOverlay.addEventListener('click', function(e) {
+                if (e.target === screenShareOverlay) {
+                    screenShareOverlay.style.display = 'none';
+                }
+            });
+            
+            // Functions
+            function closeClassroomSession() {
+                classroomModal.style.display = 'none';
+                participantList.classList.remove('show');
+                chatPanel.classList.remove('show');
+                screenShareOverlay.style.display = 'none';
+                isChatOpen = false;
+                isParticipantsOpen = false;
+                
+                // Stop any ongoing processes
+                const video = document.getElementById('video');
+                if (video.srcObject) {
+                    video.srcObject.getTracks().forEach(track => track.stop());
+                }
+                
+                if (recognition) {
+                    recognition.stop();
+                }
+                
+                // Reset video
+                classVideo.pause();
+                classVideo.removeAttribute('src');
+                classVideo.load();
+            }
+            
+            function resetControls() {
+                isMuted = false;
+                isVideoOff = false;
+                isSharingScreen = false;
+                
+                muteBtn.innerHTML = '<i class="fas fa-microphone"></i> Mute';
+                muteBtn.classList.remove('active');
+                
+                videoBtn.innerHTML = '<i class="fas fa-video"></i> Stop Video';
+                videoBtn.classList.remove('active');
+                
+                shareBtn.innerHTML = '<i class="fas fa-share-square"></i> Share Screen';
+                shareBtn.classList.remove('active');
+            }
+            
+            function loadClassVideo(className) {
+                // In a real app, this would connect to the actual classroom stream
+                // For demo, we use placeholder videos based on class
+                let videoUrl = '';
+                
+                switch(className) {
+                    case 'Advanced Mathematics':
+                        videoUrl = 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4';
+                        break;
+                    case 'Physics 101':
+                        videoUrl = 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4';
+                        break;
+                    case 'World History':
+                        videoUrl = 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4';
+                        break;
+                    case 'English Literature':
+                        videoUrl = 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4';
+                        break;
+                    default:
+                        videoUrl = 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4';
+                }
+                
+                classVideo.src = videoUrl;
+                classVideo.load();
+                classVideo.play().catch(e => console.log('Autoplay prevented:', e));
+            }
+            
+            function sendMessage() {
+                const message = chatInput.value.trim();
+                if (message) {
+                    const chatMessages = document.querySelector('.chat-messages');
+                    const messageDiv = document.createElement('div');
+                    messageDiv.className = 'message';
+                    messageDiv.innerHTML = `
+                        <div class="message-sender">You</div>
+                        <div class="message-content">${message}</div>
+                    `;
+                    chatMessages.appendChild(messageDiv);
+                    chatInput.value = '';
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                    
+                    // In real app, send message to server
+                }
+            }
+            
+            // Initialize AI Assistant components
+            function initializeAIAssistant() {
+                // Load face detection models
+                Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri('static/models'),
+                    faceapi.nets.faceLandmark68Net.loadFromUri('static/models'),
+                    faceapi.nets.faceRecognitionNet.loadFromUri('static/models'),
+                    faceapi.nets.faceExpressionNet.loadFromUri('static/models')
+                ]).then(() => {
+                    document.getElementById('model-status').textContent = 'Models loaded';
+                    startVideo();
+                }).catch(err => {
+                    console.error('Error loading models:', err);
+                    document.getElementById('model-status').textContent = 'Error loading models';
+                });
+                
+                // Setup video stream
+                function startVideo() {
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(stream => {
+                            const video = document.getElementById('video');
+                            video.srcObject = stream;
+                            
+                            // Start face detection
+                            detectFaces();
+                        })
+                        .catch(err => {
+                            console.error('Error accessing camera:', err);
+                            document.getElementById('engagement-status').textContent = 'Camera access denied';
+                        });
+                }
+                
+                // Face detection function
+                function detectFaces() {
+                    const video = document.getElementById('video');
+                    const canvas = faceapi.createCanvasFromMedia(video);
+                    document.getElementById('face-data').appendChild(canvas);
+                    
+                    const displaySize = { width: video.width, height: video.height };
+                    faceapi.matchDimensions(canvas, displaySize);
+                    
+                    setInterval(async () => {
+                        const detections = await faceapi.detectAllFaces(video, 
+                            new faceapi.TinyFaceDetectorOptions())
+                            .withFaceLandmarks()
+                            .withFaceExpressions();
+                        
+                        const resizedDetections = faceapi.resizeResults(detections, displaySize);
+                        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+                        faceapi.draw.drawDetections(canvas, resizedDetections);
+                        faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
+                        faceapi.draw.drawFaceExpressions(canvas, resizedDetections);
+                        
+                        // Update engagement status
+                        if (detections.length > 0) {
+                            const expressions = detections[0].expressions;
+                            const dominantExpression = Object.entries(expressions)
+                                .reduce((a, b) => a[1] > b[1] ? a : b)[0];
+                            
+                            document.getElementById('engagement-status').textContent = 
+                                `Detected: ${dominantExpression} expression`;
+                        } else {
+                            document.getElementById('engagement-status').textContent = 
+                                'No face detected';
+                        }
+                    }, 100);
+                }
+                
+                // Voice recognition setup
+                const startVoiceBtn = document.getElementById('start-voice');
+                const stopVoiceBtn = document.getElementById('stop-voice');
+                const voiceStatus = document.getElementById('voice-status');
+                const textQuery = document.getElementById('text-query');
+                
+                if (startVoiceBtn) {
+                    startVoiceBtn.addEventListener('click', startVoiceRecognition);
+                    stopVoiceBtn.addEventListener('click', stopVoiceRecognition);
+                }
+                
+                function startVoiceRecognition() {
+                    if ('webkitSpeechRecognition' in window) {
+                        recognition = new webkitSpeechRecognition();
+                        recognition.continuous = false;
+                        recognition.interimResults = false;
+                        
+                        recognition.onstart = function() {
+                            voiceStatus.textContent = 'Listening... Speak now';
+                            startVoiceBtn.style.display = 'none';
+                            stopVoiceBtn.style.display = 'block';
+                        };
+                        
+                        recognition.onresult = function(event) {
+                            const transcript = event.results[0][0].transcript;
+                            textQuery.value = transcript;
+                            voiceStatus.textContent = 'Voice query captured';
+                            
+                            // Automatically submit the query
+                            setTimeout(() => {
+                                document.getElementById('submit-text').click();
+                            }, 500);
+                        };
+                        
+                        recognition.onerror = function(event) {
+                            voiceStatus.textContent = 'Error occurred in recognition: ' + event.error;
+                            startVoiceBtn.style.display = 'block';
+                            stopVoiceBtn.style.display = 'none';
+                        };
+                        
+                        recognition.onend = function() {
+                            startVoiceBtn.style.display = 'block';
+                            stopVoiceBtn.style.display = 'none';
+                        };
+                        
+                        recognition.start();
+                    } else {
+                        voiceStatus.textContent = 'Voice recognition not supported in this browser';
+                    }
+                }
+                
+                function stopVoiceRecognition() {
+                    if (recognition) {
+                        recognition.stop();
+                    }
+                }
+                
+                // Text query handling
+                document.getElementById('submit-text')?.addEventListener('click', function() {
+                    const query = document.getElementById('text-query').value;
+                    if (query.trim()) {
+                        document.getElementById('response-text').textContent = 
+                            `Processing your query about "${query}"...`;
+                        
+                        // Simulate AI response after a delay
+                        setTimeout(() => {
+                            const responses = [
+                                `The concept you're asking about relates to fundamental principles in this subject. Would you like me to provide more detailed explanations or examples?`,
+                                `Based on your question, I recommend reviewing chapter 3 of your textbook which covers this topic extensively.`,
+                                `That's an excellent question! Here's a breakdown of the key concepts related to your query...`,
+                                `I've analyzed your question and found several relevant resources that might help. Would you like me to share them?`
+                            ];
+                            
+                            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                            document.getElementById('response-text').textContent = randomResponse;
+                        }, 1500);
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
