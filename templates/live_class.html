@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduConnect - Live Class</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/ai-assistant.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="live-class-container">
+        <header class="live-class-header">
+            <h1>{{ course.title }} - Live Class</h1>
+            <div class="class-info">
+                <span>Professor: {{ course.professor }}</span>
+                <span>Participants: <span id="participant-count">1</span></span>
+                <button id="toggle-ai-assistant" class="btn btn-ai">
+                    <i class="fas fa-robot"></i> AI Assistant
+                </button>
+            </div>
+        </header>
+        
+        <div class="live-class-content">
+            <div class="video-container">
+                <div class="video-grid">
+                    <div class="video-item professor-video">
+                        <video id="professor-video" autoplay muted></video>
+                        <div class="video-label">Professor {{ course.professor.split(' ')[0] }}</div>
+                        <div class="engagement-meter">
+                            <div class="engagement-bar" id="prof-engagement"></div>
+                            <span>Engagement: <span id="prof-engagement-value">0%</span></span>
+                        </div>
+                    </div>
+                    <div class="video-item my-video">
+                        <video id="local-video" autoplay muted></video>
+                        <div class="video-label">You</div>
+                        <div class="engagement-meter">
+                            <div class="engagement-bar" id="student-engagement"></div>
+                            <span>Engagement: <span id="student-engagement-value">0%</span></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="class-controls">
+                    <button class="btn btn-control" id="mute-btn">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="btn btn-control" id="video-btn">
+                        <i class="fas fa-video"></i>
+                    </button>
+                    <button class="btn btn-control" id="screen-share-btn">
+                        <i class="fas fa-desktop"></i>
+                    </button>
+                    <button class="btn btn-control btn-end-call" id="leave-btn">
+                        <i class="fas fa-phone-slash"></i> Leave
+                    </button>
+                </div>
+            </div>
+            
+            <div class="class-sidebar">
+                <div class="sidebar-tabs">
+                    <button class="tab-btn active" data-tab="whiteboard">Whiteboard</button>
+                    <button class="tab-btn" data-tab="chat">Chat</button>
+                    <button class="tab-btn" data-tab="participants">Participants</button>
+                    <button class="tab-btn" data-tab="ai-assistant">AI Assistant</button>
+                </div>
+                
+                <div class="tab-content active" id="whiteboard-tab">
+                    <canvas id="whiteboard" width="600" height="400"></canvas>
+                    <div class="whiteboard-tools">
+                        <input type="color" id="color-picker" value="#000000">
+                        <input type="range" id="brush-size" min="1" max="20" value="2">
+                        <button id="clear-whiteboard">Clear</button>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="chat-tab">
+                    <div class="chat-messages" id="chat-messages"></div>
+                    <div class="chat-input">
+                        <input type="text" id="chat-input" placeholder="Type your message...">
+                        <button id="send-message">Send</button>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="participants-tab">
+                    <ul class="participants-list" id="participants-list">
+                        <li>{{ user.name }} (You)</li>
+                    </ul>
+                </div>
+                
+                <div class="tab-content" id="ai-assistant-tab">
+                    <div class="ai-assistant-container">
+                        <div class="ai-input-modes">
+                            <button class="input-mode-btn active" data-mode="text">
+                                <i class="fas fa-keyboard"></i> Text
+                            </button>
+                            <button class="input-mode-btn" data-mode="voice">
+                                <i class="fas fa-microphone"></i> Voice
+                            </button>
+                            <button class="input-mode-btn" data-mode="image">
+                                <i class="fas fa-image"></i> Image
+                            </button>
+                        </div>
+                        
+                        <div class="ai-input-container text-mode active">
+                            <textarea id="ai-text-query" placeholder="Type your doubt/question..."></textarea>
+                            <button id="submit-ai-text" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Ask AI
+                            </button>
+                        </div>
+                        
+                        <div class="ai-input-container voice-mode">
+                            <div id="voice-recording-status">
+                                <i class="fas fa-microphone-slash"></i> Ready to record
+                            </div>
+                            <button id="start-ai-voice" class="btn btn-primary">
+                                <i class="fas fa-microphone"></i> Start Recording
+                            </button>
+                            <div id="voice-transcript"></div>
+                        </div>
+                        
+                        <div class="ai-input-container image-mode">
+                            <div class="image-upload-container">
+                                <input type="file" id="ai-image-upload" accept="image/*">
+                                <label for="ai-image-upload" class="btn btn-primary">
+                                    <i class="fas fa-upload"></i> Upload Image
+                                </label>
+                                <div id="image-preview-container"></div>
+                                <button id="submit-ai-image" class="btn btn-primary" disabled>
+                                    <i class="fas fa-search"></i> Analyze
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="ai-response-container">
+                            <div class="ai-response-header">
+                                <h4>AI Response</h4>
+                                <div class="ai-response-controls">
+                                    <button id="read-response" class="btn-icon">
+                                        <i class="fas fa-volume-up"></i>
+                                    </button>
+                                    <button id="copy-response" class="btn-icon">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div id="ai-response-text">
+                                <p class="ai-placeholder">Ask me anything about the lecture or upload materials for explanation.</p>
+                            </div>
+                            <div class="ai-model-info">
+                                <span class="model-indicator">
+                                    <i class="fas fa-brain"></i> Powered by Hugging Face & OpenVINO
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="/static/js/live_class.js"></script>
+    <script src="/static/js/ai_integration.js"></script>
+</body>
+</html>

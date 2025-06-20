@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduConnect - Resources</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <span>EduConnect</span>
+            </a>
+            <div class="user-menu">
+                <i class="fas fa-bell"></i>
+                <i class="fas fa-envelope"></i>
+                <div class="user-avatar">JD</div>
+            </div>
+        </header>
+        
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="index.html" class="menu-item">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="schedule.html" class="menu-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Schedule</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="courses.html" class="menu-item">
+                        <i class="fas fa-book"></i>
+                        <span>Courses</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="assignments.html" class="menu-item">
+                        <i class="fas fa-tasks"></i>
+                        <span>Assignments</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="resources.html" class="menu-item active">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Resources</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="classmates.html" class="menu-item">
+                        <i class="fas fa-users"></i>
+                        <span>Classmates</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="grades.html" class="menu-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Grades</span>
+                    </a>
+                </li>
+                
+                <li class="divider"></li>
+                
+                <li>
+                    <a href="settings.html" class="menu-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="help.html" class="menu-item">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Help</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <h2 class="section-title">
+                <i class="fas fa-file-alt"></i>
+                Course Resources
+            </h2>
+            
+            <div class="classes-grid">
+                <div class="class-card">
+                    <div class="class-header math"></div>
+                    <div class="class-body">
+                        <h3 class="class-title">Advanced Mathematics</h3>
+                        <div class="class-schedule">
+                            <i class="fas fa-folder-open"></i>
+                            <span>12 files available</span>
+                        </div>
+                        <div class="class-actions">
+                            <button class="btn btn-sm btn-outline">
+                                <i class="fas fa-eye"></i> View All
+                            </button>
+                            <button class="btn btn-sm btn-join">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="class-card">
+                    <div class="class-header science"></div>
+                    <div class="class-body">
+                        <h3 class="class-title">Physics 101</h3>
+                        <div class="class-schedule">
+                            <i class="fas fa-folder-open"></i>
+                            <span>8 files available</span>
+                        </div>
+                        <div class="class-actions">
+                            <button class="btn btn-sm btn-outline">
+                                <i class="fas fa-eye"></i> View All
+                            </button>
+                            <button class="btn btn-sm btn-join">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="class-card">
+                    <div class="class-header history"></div>
+                    <div class="class-body">
+                        <h3 class="class-title">World History</h3>
+                        <div class="class-schedule">
+                            <i class="fas fa-folder-open"></i>
+                            <span>5 files available</span>
+                        </div>
+                        <div class="class-actions">
+                            <button class="btn btn-sm btn-outline">
+                                <i class="fas fa-eye"></i> View All
+                            </button>
+                            <button class="btn btn-sm btn-join">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="class-card">
+                    <div class="class-header literature"></div>
+                    <div class="class-body">
+                        <h3 class="class-title">English Literature</h3>
+                        <div class="class-schedule">
+                            <i class="fas fa-folder-open"></i>
+                            <span>7 files available</span>
+                        </div>
+                        <div class="class-actions">
+                            <button class="btn btn-sm btn-outline">
+                                <i class="fas fa-eye"></i> View All
+                            </button>
+                            <button class="btn btn-sm btn-join">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="section-title" style="margin-top: 2.5rem;">
+                <i class="fas fa-bookmark"></i>
+                Recent Files
+            </h2>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Course</th>
+                        <th>Type</th>
+                        <th>Size</th>
+                        <th>Last Updated</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><i class="fas fa-file-pdf"></i> Linear_Algebra_Chapter5.pdf</td>
+                        <td>Advanced Mathematics</td>
+                        <td>PDF</td>
+                        <td>2.4 MB</td>
+                        <td>Oct 5, 2023</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-file-powerpoint"></i> Quantum_Intro.pptx</td>
+                        <td>Physics 101</td>
+                        <td>PPT</td>
+                        <td>5.1 MB</td>
+                        <td>Oct 3, 2023</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-file-word"></i> Shakespeare_Sonnets.docx</td>
+                        <td>English Literature</td>
+                        <td>DOCX</td>
+                        <td>1.2 MB</td>
+                        <td>Oct 1, 2023</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-file-video"></i> WW2_Documentary.mp4</td>
+                        <td>World History</td>
+                        <td>MP4</td>
+                        <td>256 MB</td>
+                        <td>Sep 28, 2023</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="fas fa-file-alt"></i> Problem_Set_4.pdf</td>
+                        <td>Advanced Mathematics</td>
+                        <td>PDF</td>
+                        <td>1.8 MB</td>
+                        <td>Sep 25, 2023</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+</body>
+</html>

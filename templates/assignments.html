@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduConnect - Assignments</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <span>EduConnect</span>
+            </a>
+            <div class="user-menu">
+                <i class="fas fa-bell"></i>
+                <i class="fas fa-envelope"></i>
+                <div class="user-avatar">JD</div>
+            </div>
+        </header>
+        
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="index.html" class="menu-item">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="schedule.html" class="menu-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Schedule</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="courses.html" class="menu-item">
+                        <i class="fas fa-book"></i>
+                        <span>Courses</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="assignments.html" class="menu-item active">
+                        <i class="fas fa-tasks"></i>
+                        <span>Assignments</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="resources.html" class="menu-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Resources</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="classmates.html" class="menu-item">
+                        <i class="fas fa-users"></i>
+                        <span>Classmates</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="grades.html" class="menu-item">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Grades</span>
+                    </a>
+                </li>
+                
+                <li class="divider"></li>
+                
+                <li>
+                    <a href="settings.html" class="menu-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="help.html" class="menu-item">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Help</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <h2 class="section-title">
+                <i class="fas fa-tasks"></i>
+                My Assignments
+            </h2>
+            
+            <div class="session-list">
+                <div class="session-item">
+                    <div class="session-info">
+                        <div class="session-time" style="background-color: #fff4e6; color: #ff9500;">
+                            Due Oct 12
+                        </div>
+                        <div class="session-details">
+                            <h4>Linear Algebra Problem Set</h4>
+                            <p>Advanced Mathematics | 15 Problems</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-join">
+                        <i class="fas fa-upload"></i> Submit
+                    </button>
+                </div>
+                
+                <div class="session-item">
+                    <div class="session-info">
+                        <div class="session-time" style="background-color: #e6f7f0; color: #00a76f;">
+                            Submitted
+                        </div>
+                        <div class="session-details">
+                            <h4>Quantum Mechanics Essay</h4>
+                            <p>Physics 101 | Graded: 92/100</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline">
+                        <i class="fas fa-eye"></i> View Feedback
+                    </button>
+                </div>
+                
+                <div class="session-item">
+                    <div class="session-info">
+                        <div class="session-time" style="background-color: #fff4e6; color: #ff9500;">
+                            Due Oct 15
+                        </div>
+                        <div class="session-details">
+                            <h4>Shakespeare Analysis Paper</h4>
+                            <p>English Literature | 5-7 pages</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline">
+                        <i class="fas fa-edit"></i> Start Draft
+                    </button>
+                </div>
+                
+                <div class="session-item">
+                    <div class="session-info">
+                        <div class="session-time" style="background-color: #ffe6e6; color: #ff0000;">
+                            Overdue
+                        </div>
+                        <div class="session-details">
+                            <h4>World War II Timeline</h4>
+                            <p>World History | 10 key events</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-join">
+                        <i class="fas fa-upload"></i> Submit Late
+                    </button>
+                </div>
+            </div>
+            
+            <h2 class="section-title" style="margin-top: 2.5rem;">
+                <i class="fas fa-calendar-check"></i>
+                Completed Assignments
+            </h2>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Assignment</th>
+                        <th>Course</th>
+                        <th>Submitted</th>
+                        <th>Status</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Quantum Mechanics Essay</td>
+                        <td>Physics 101</td>
+                        <td>Oct 5, 2023</td>
+                        <td><span class="badge badge-success">Graded</span></td>
+                        <td>92/100</td>
+                    </tr>
+                    <tr>
+                        <td>Calculus Derivatives</td>
+                        <td>Advanced Mathematics</td>
+                        <td>Sep 28, 2023</td>
+                        <td><span class="badge badge-success">Graded</span></td>
+                        <td>88/100</td>
+                    </tr>
+                    <tr>
+                        <td>Poetry Analysis</td>
+                        <td>English Literature</td>
+                        <td>Sep 21, 2023</td>
+                        <td><span class="badge badge-success">Graded</span></td>
+                        <td>95/100</td>
+                    </tr>
+                    <tr>
+                        <td>Ancient Civilizations</td>
+                        <td>World History</td>
+                        <td>Sep 14, 2023</td>
+                        <td><span class="badge badge-success">Graded</span></td>
+                        <td>90/100</td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+</body>
+</html>

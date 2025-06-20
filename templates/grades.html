@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduConnect - Grades</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="logo">
+                <i class="fas fa-chalkboard-teacher"></i>
+                <span>EduConnect</span>
+            </a>
+            <div class="user-menu">
+                <i class="fas fa-bell"></i>
+                <i class="fas fa-envelope"></i>
+                <div class="user-avatar">JD</div>
+            </div>
+        </header>
+        
+        <aside class="sidebar">
+            <ul class="sidebar-menu">
+                <li>
+                    <a href="index.html" class="menu-item">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="schedule.html" class="menu-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Schedule</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="courses.html" class="menu-item">
+                        <i class="fas fa-book"></i>
+                        <span>Courses</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="assignments.html" class="menu-item">
+                        <i class="fas fa-tasks"></i>
+                        <span>Assignments</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="resources.html" class="menu-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Resources</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="classmates.html" class="menu-item">
+                        <i class="fas fa-users"></i>
+                        <span>Classmates</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="grades.html" class="menu-item active">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Grades</span>
+                    </a>
+                </li>
+                
+                <li class="divider"></li>
+                
+                <li>
+                    <a href="settings.html" class="menu-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="help.html" class="menu-item">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Help</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+        
+        <main class="main-content">
+            <h2 class="section-title">
+                <i class="fas fa-chart-line"></i>
+                My Grades
+            </h2>
+            
+            <div class="welcome-banner" style="background: linear-gradient(135deg, #4cc9f0, #4895ef);">
+                <h1>Overall GPA: 3.7</h1>
+                <p>You're doing great! Keep up the good work.</p>
+            </div>
+            
+            <div class="classes-grid" style="grid-template-columns: 1fr;">
+                <div class="class-card">
+                    <div class="class-body">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h3 class="class-title">Advanced Mathematics</h3>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="font-size: 1.2rem; font-weight: 600;">Grade: <span style="color: #00a76f;">A-</span></div>
+                                <div style="font-size: 1.2rem; font-weight: 600;">Score: <span style="color: #4361ee;">89%</span></div>
+                            </div>
+                        </div>
+                        
+                        <div style="background-color: #f5f7fb; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Assignments (40%)</span>
+                                <span><strong>92%</strong></span>
+                            </div>
+                            <div style="height: 8px; background-color: #e0e0e0; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 92%; height: 100%; background-color: #4cc9f0;"></div>
+                            </div>
+                        </div>
+                        
+                        <div style="background-color: #f5f7fb; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Exams (50%)</span>
+                                <span><strong>87%</strong></span>
+                            </div>
+                            <div style="height: 8px; background-color: #e0e0e0; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 87%; height: 100%; background-color: #4895ef;"></div>
+                            </div>
+                        </div>
+                        
+                        <div style="background-color: #f5f7fb; border-radius: 8px; padding: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Participation (10%)</span>
+                                <span><strong>95%</strong></span>
+                            </div>
+                            <div style="height: 8px; background-color: #e0e0e0; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 95%; height: 100%; background-color: #3f37c9;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="class-card">
+                    <div class="class-body">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h3 class="class-title">Physics 101</h3>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="font-size: 1.2rem; font-weight: 600;">Grade: <span style="color: #00a76f;">A</span></div>
+                                <div style="font-size: 1.2rem; font-weight: 600;">Score: <span style="color: #4361ee;">93%</span></div>
+                            </div>
+                        </div>
+                        
+                        <div style="background-color: #f5f7fb; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Assignments (30%)</span>
+                                <span><strong>96%</strong></span>
+                            </div>
+                            <div style="height: 8px; background-color: #e0e0e0; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 96%; height: 100%; background-color: #4cc9f0;"></div>
+                            </div>
+                        </div>
+                        
+                        <div style="background-color: #f5f7fb; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Exams (60%)</span>
+                                <span><strong>92%</strong></span>
+                            </div>
+                            <div style="height: 8px; background-color: #e0e0e0; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 92%; height: 100%; background-color: #4895ef;"></div>
+                            </div>
+                        </div>
+                        
+                        <div style="background-color: #f5f7fb; border-radius: 8px; padding: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Labs (10%)</span>
+                                <span><strong>88%</strong></span>
+                            </div>
+                            <div style="height: 8px; background-color: #e0e0e0; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 88%; height: 100%; background-color: #3f37c9;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="class-card">
+                    <div class="class-body">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h3 class="class-title">English Literature</h3>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <div style="font-size: 1.2rem; font-weight: 600;">Grade: <span style="color: #00a76f;">A</span></div>
+                                <div style="font-size: 1.2rem; font-weight: 600;">Score: <span style="color: #4361ee;">95%</span></div>
+                            </div>
+                        </div>
+                        
+                        <div style="background-color: #f5f7fb; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Essays (50%)</span>
+                                <span><strong>97%</strong></span>
+                            </div>
+                            <div style="height: 8px; background-color: #e0e0e0; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 97%; height: 100%; background-color: #4cc9f0;"></div>
+                            </div>
+                        </div>
+                        
+                        <div style="background-color: #f5f7fb; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Exams (40%)</span>
+                                <span><strong>93%</strong></span>
+                            </div>
+                            <div style="height: 8px; background-color: #e0e0e0; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 93%; height: 100%; background-color: #4895ef;"></div>
+                            </div>
+                        </div>
+                        
+                        <div style="background-color: #f5f7fb; border-radius: 8px; padding: 1rem;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                <span>Participation (10%)</span>
+                                <span><strong>98%</strong></span>
+                            </div>
+                            <div style="height: 8px; background-color: #e0e0e0; border-radius: 4px; overflow: hidden;">
+                                <div style="width: 98%; height: 100%; background-color: #3f37c9;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="section-title" style="margin-top: 2.5rem;">
+                <i class="fas fa-history"></i>
+                Grade History
+            </h2>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Assignment</th>
+                        <th>Due Date</th>
+                        <th>Submitted</th>
+                        <th>Grade</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Advanced Mathematics</td>
+                        <td>Linear Algebra Problem Set</td>
+                        <td>Oct 12, 2023</td>
+                        <td>Oct 10, 2023</td>
+                        <td>92/100</td>
+                        <td><span class="badge badge-success">Graded</span></td>
+                    </tr>
+                    <tr>
+                        <td>Physics 101</td>
+                        <td>Quantum Mechanics Essay</td>
+                        <td>Oct 5, 2023</td>
+                        <td>Oct 3, 2023</td>
+                        <td>96/100</td>
+                        <td><span class="badge badge-success">Graded</span></td>
+                    </tr>
+                    <tr>
+                        <td>English Literature</td>
+                        <td>Shakespeare Analysis</td>
+                        <td>Sep 28, 2023</td>
+                        <td>Sep 26, 2023</td>
+                        <td>95/100</td>
+                        <td><span class="badge badge-success">Graded</span></td>
+                    </tr>
+                    <tr>
+                        <td>World History</td>
+                        <td>WWII Timeline Project</td>
+                        <td>Sep 21, 2023</td>
+                        <td>Sep 20, 2023</td>
+                        <td>88/100</td>
+                        <td><span class="badge badge-success">Graded</span></td>
+                    </tr>
+                    <tr>
+                        <td>Advanced Mathematics</td>
+                        <td>Derivatives Quiz</td>
+                        <td>Sep 14, 2023</td>
+                        <td>Sep 14, 2023</td>
+                        <td>85/100</td>
+                        <td><span class="badge badge-success">Graded</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+</body>
+</html>
